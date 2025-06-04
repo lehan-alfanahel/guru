@@ -637,8 +637,8 @@ export default function TeacherAttendanceReports() {
      headerData.push([]);
      headerData.push([]);
      // Add signature
-     const currentDate = format(new Date(), "d MMMM yyyy", { locale: id });
-     headerData.push([`${schoolInfo.address}, ${currentDate}`]);
+     //const currentDate = format(new Date(), "d MMMM yyyy", { locale: id });
+     //headerData.push([`${schoolInfo.address}, ${currentDate}`]);
      headerData.push([]);
      headerData.push(["", "Mengetahui", "", "", "", "", "", "Administrator Sekolah"]);
      headerData.push(["", "KEPALA SEKOLAH,", "", "", "", "", "", "Nama Sekolah,"]);
