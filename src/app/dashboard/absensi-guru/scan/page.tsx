@@ -652,7 +652,7 @@ export default function TeacherAttendanceScan() {
                  value={izinReason}
                  onChange={(e) => setIzinReason(e.target.value)}
                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
-                 placeholder="Masukkan alasan izin,  contoh : rapat, dinas luar, dll."
+                 placeholder="Masukkan alasan izin. Contoh : rapat, dinas luar, dll."
                  rows={3}
                  required={attendanceType === 'izin'}
                />
