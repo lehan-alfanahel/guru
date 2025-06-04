@@ -18,10 +18,15 @@ export default function TeacherAttendanceReports() {
  const [filteredTeachers, setFilteredTeachers] = useState<any[]>([]);
  const [userData, setUserData] = useState<any>(null);
  const [attendanceData, setAttendanceData] = useState<any[]>([]);
- const [dateRange, setDateRange] = useState({
-   start: format(new Date(new Date().setDate(1)), "yyyy-MM-dd"),
-   end: format(new Date(new Date().setMonth(new Date().getMonth() + 1, 0)), "yyyy-MM-dd")
+ const [schoolInfo, setSchoolInfo] = useState({
+   name: "NAMA SEKOLAH",
+   address: "Alamat",
+   npsn: "NPSN",
+   principalName: "",
+   principalNip: ""
  });
+ // Format current date for display
+ const formattedMonth = format(currentDate, "MMMM yyyy", { locale: id });
  // Helper function to calculate percentages for attendance data
  const calculatePercentage = (data: any[], type: string): string => {
    if (!data || data.length === 0) return "0.0";
@@ -34,18 +39,6 @@ export default function TeacherAttendanceReports() {
    });
    return item ? item.value : "0.0";
  };
- const [schoolInfo, setSchoolInfo] = useState({
-   name: "NAMA SEKOLAH",
-   address: "Alamat",
-   npsn: "NPSN",
-   principalName: "",
-   principalNip: ""
- });
- // Format current date for display
- const formattedMonth = format(currentDate, "MMMM yyyy", {
-   locale: id
- });
- const formattedYear = format(currentDate, "yyyy");
  // Fetch school, teachers and attendance data
  useEffect(() => {
    const fetchData = async () => {
@@ -110,6 +103,7 @@ export default function TeacherAttendanceReports() {
        where("role", "in", ["teacher", "staff"])
      );
      const teachersSnapshot = await getDocs(teachersQuery);
+
      const teachersList: any[] = [];
      teachersSnapshot.forEach(doc => {
        teachersList.push({
@@ -138,23 +132,21 @@ export default function TeacherAttendanceReports() {
          const data = doc.data();
          const teacherId = data.teacherId;
          const status = data.status;
-         const type = data.type; // 'in' or 'out'
+         const type = data.type; // 'in', 'out', 'izin', 'alpha'
          // Find the teacher and update their attendance counts
          const teacherIndex = teachersList.findIndex(t => t.id === teacherId);
          if (teacherIndex !== -1) {
-           // Only count check-ins, not check-outs
-           if (type === 'in') {
-             if (status === 'present') {
-               teachersList[teacherIndex].hadir++;
-             } else if (status === 'late') {
-               teachersList[teacherIndex].terlambat++;
-             } else if (status === 'permitted') {
-               teachersList[teacherIndex].izin++;
-             } else if (status === 'absent') {
-               teachersList[teacherIndex].alpha++;
-             }
-             teachersList[teacherIndex].total++;
+           // Count all attendance types, not just check-ins
+           if (status === 'present') {
+             teachersList[teacherIndex].hadir++;
+           } else if (status === 'terlambat') {
+             teachersList[teacherIndex].terlambat++;
+           } else if (status === 'izin') {
+             teachersList[teacherIndex].izin++;
+           } else if (status === 'alpha') {
+             teachersList[teacherIndex].alpha++;
            }
+           teachersList[teacherIndex].total++;
          }
        });
      }
@@ -166,7 +158,6 @@ export default function TeacherAttendanceReports() {
      let totalIzin = 0;
      let totalAlpha = 0;
      let totalAttendance = 0;
-
      teachersList.forEach(teacher => {
        totalHadir += teacher.hadir || 0;
        totalTerlambat += teacher.terlambat || 0;
@@ -181,7 +172,6 @@ export default function TeacherAttendanceReports() {
      const terlambatPercentage = (totalTerlambat / totalAttendance * 100).toFixed(1);
      const izinPercentage = (totalIzin / totalAttendance * 100).toFixed(1);
      const alphaPercentage = (totalAlpha / totalAttendance * 100).toFixed(1);
-
      setAttendanceData([
        {
          type: 'Hadir',
@@ -235,29 +225,20 @@ export default function TeacherAttendanceReports() {
      // Add header with school information
      pdfDoc.setFontSize(16);
      pdfDoc.setFont("helvetica", "bold");
-     pdfDoc.text(schoolInfo.name.toUpperCase(), pageWidth / 2, margin, {
-       align: "center"
-     });
+     pdfDoc.text(schoolInfo.name.toUpperCase(), pageWidth / 2, margin, { align: "center" });
+
      pdfDoc.setFontSize(12);
      pdfDoc.setFont("helvetica", "normal");
-     pdfDoc.text(schoolInfo.address, pageWidth / 2, margin + 7, {
-       align: "center"
-     });
-     pdfDoc.text(`NPSN: ${schoolInfo.npsn}`, pageWidth / 2, margin + 14, {
-       align: "center"
-     });
+     pdfDoc.text(schoolInfo.address, pageWidth / 2, margin + 7, { align: "center" });
+     pdfDoc.text(`NPSN: ${schoolInfo.npsn}`, pageWidth / 2, margin + 14, { align: "center" });
      // Add horizontal line
      pdfDoc.setLineWidth(0.5);
      pdfDoc.line(margin, margin + 20, pageWidth - margin, margin + 20);
      // Add title
      pdfDoc.setFontSize(12);
      pdfDoc.setFont("helvetica", "normal");
-     pdfDoc.text("REKAPITULASI LAPORAN ABSENSI GURU DAN TENAGA KEPENDIDIKAN", pageWidth / 2, margin + 30, {
-       align: "center"
-     });
-     pdfDoc.text(`BULAN ${formattedMonth.toUpperCase()}`, pageWidth / 2, margin + 36, {
-       align: "center"
-     });
+     pdfDoc.text("REKAPITULASI LAPORAN ABSENSI GURU DAN TENAGA KEPENDIDIKAN", pageWidth / 2, margin + 30, { align: "center" });
+     pdfDoc.text(`BULAN ${formattedMonth.toUpperCase()}`, pageWidth / 2, margin + 36, { align: "center" });
      // Main attendance table
      let yPos = margin + 43;
      // Table headers
@@ -276,19 +257,13 @@ export default function TeacherAttendanceReports() {
        if (i > 0) {
          pdfDoc.line(xPos, yPos, xPos, yPos + 8);
        }
-       pdfDoc.text(header, xPos + colWidths[i] / 2, yPos + 5.5, {
-         align: "center"
-       });
+       pdfDoc.text(header, xPos + colWidths[i] / 2, yPos + 5.5, { align: "center" });
        xPos += colWidths[i];
      });
      yPos += 8;
      // Draw table rows
      pdfDoc.setFontSize(10);
-     let totalHadir = 0,
-       totalTerlambat = 0,
-       totalIzin = 0,
-       totalAlpha = 0,
-       totalAll = 0;
+     let totalHadir = 0, totalTerlambat = 0, totalIzin = 0, totalAlpha = 0, totalAll = 0;
      // Process each teacher's data
      filteredTeachers.forEach((teacher, index) => {
        // Row background (alternating)
@@ -307,59 +282,44 @@ export default function TeacherAttendanceReports() {
        totalAll += teacherTotal;
        // Draw cell content
        xPos = margin;
+
        // Number
-       pdfDoc.text((index + 1).toString(), xPos + colWidths[0] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text((index + 1).toString(), xPos + colWidths[0] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[0];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
+
        // Name - truncate if too long
        const displayName = teacher.name.length > 25 ? teacher.name.substring(0, 22) + "..." : teacher.name;
        pdfDoc.text(displayName || "", xPos + 2, yPos + 5);
        xPos += colWidths[1];
-  // Draw vertical line
-      pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       //pdfDoc.text(teacher.nik || "", xPos + colWidths[2] / 2, yPos + 5, {
-        // align: "center"
-      // });
-      xPos += colWidths[2];
+       // Draw vertical line
+       pdfDoc.line(xPos, yPos, xPos, yPos + 7);
+       xPos += colWidths[2];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
        const roleText = teacher.role === 'teacher' ? 'Guru' : 'Tendik';
-       pdfDoc.text(roleText, xPos + colWidths[3] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text(roleText, xPos + colWidths[3] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[3];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       pdfDoc.text((teacher.hadir || 0).toString(), xPos + colWidths[4] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text((teacher.hadir || 0).toString(), xPos + colWidths[4] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[4];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       pdfDoc.text((teacher.terlambat || 0).toString(), xPos + colWidths[5] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text((teacher.terlambat || 0).toString(), xPos + colWidths[5] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[5];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       pdfDoc.text((teacher.izin || 0).toString(), xPos + colWidths[6] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text((teacher.izin || 0).toString(), xPos + colWidths[6] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[6];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       pdfDoc.text((teacher.alpha || 0).toString(), xPos + colWidths[7] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text((teacher.alpha || 0).toString(), xPos + colWidths[7] / 2, yPos + 5, { align: "center" });
        xPos += colWidths[7];
        // Draw vertical line
        pdfDoc.line(xPos, yPos, xPos, yPos + 7);
-       pdfDoc.text(teacherTotal.toString(), xPos + colWidths[8] / 2, yPos + 5, {
-         align: "center"
-       });
+       pdfDoc.text(teacherTotal.toString(), xPos + colWidths[8] / 2, yPos + 5, { align: "center" });
        yPos += 7;
        // Add a new page if needed
        if (yPos > pageHeight - margin - 100 && index < filteredTeachers.length - 1) {
@@ -367,17 +327,12 @@ export default function TeacherAttendanceReports() {
          // Add header to new page
          pdfDoc.setFontSize(12);
          pdfDoc.setFont("helvetica", "bold");
-         pdfDoc.text(schoolInfo.name.toUpperCase(), pageWidth / 2, margin + 6, {
-           align: "center"
-         });
+         pdfDoc.text(schoolInfo.name.toUpperCase(), pageWidth / 2, margin + 6, { align: "center" });
          pdfDoc.setFontSize(12);
          pdfDoc.setFont("helvetica", "normal");
-         pdfDoc.text(schoolInfo.address, pageWidth / 2, margin + 12, {
-           align: "center"
-         });
-         pdfDoc.text(`NPSN : ${schoolInfo.npsn}`, pageWidth / 2, margin + 18, {
-           align: "center"
-         });
+         pdfDoc.text(schoolInfo.address, pageWidth / 2, margin + 12, { align: "center" });
+         pdfDoc.text(`NPSN : ${schoolInfo.npsn}`, pageWidth / 2, margin + 18, { align: "center" });
+
          // Add horizontal line
          pdfDoc.setLineWidth(0.5);
          pdfDoc.line(margin, margin + 22, pageWidth - margin, margin + 22);
@@ -393,9 +348,7 @@ export default function TeacherAttendanceReports() {
            if (i > 0) {
              pdfDoc.line(xPos, yPos, xPos, yPos + 8);
            }
-           pdfDoc.text(header, xPos + colWidths[i] / 2, yPos + 5.5, {
-             align: "center"
-           });
+           pdfDoc.text(header, xPos + colWidths[i] / 2, yPos + 5.5, { align: "center" });
            xPos += colWidths[i];
          });
          yPos += 8;
@@ -410,39 +363,27 @@ export default function TeacherAttendanceReports() {
      pdfDoc.setFontSize(10);
      pdfDoc.setFont("helvetica", "normal");
      // Total text
-     pdfDoc.text("TOTAL", xPos + colWidths[0] / 2 + colWidths[1] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text("TOTAL", xPos + colWidths[0] / 2 + colWidths[1] / 2, yPos + 5, { align: "center" });
      xPos += colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3];
      // Draw vertical line
      pdfDoc.line(xPos, yPos, xPos, yPos + 8);
-     pdfDoc.text(totalHadir.toString(), xPos + colWidths[4] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text(totalHadir.toString(), xPos + colWidths[4] / 2, yPos + 5, { align: "center" });
      xPos += colWidths[4];
      // Draw vertical line
      pdfDoc.line(xPos, yPos, xPos, yPos + 8);
-     pdfDoc.text(totalTerlambat.toString(), xPos + colWidths[5] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text(totalTerlambat.toString(), xPos + colWidths[5] / 2, yPos + 5, { align: "center" });
      xPos += colWidths[5];
      // Draw vertical line
      pdfDoc.line(xPos, yPos, xPos, yPos + 8);
-     pdfDoc.text(totalIzin.toString(), xPos + colWidths[6] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text(totalIzin.toString(), xPos + colWidths[6] / 2, yPos + 5, { align: "center" });
      xPos += colWidths[6];
      // Draw vertical line
      pdfDoc.line(xPos, yPos, xPos, yPos + 8);
-     pdfDoc.text(totalAlpha.toString(), xPos + colWidths[7] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text(totalAlpha.toString(), xPos + colWidths[7] / 2, yPos + 5, { align: "center" });
      xPos += colWidths[7];
      // Draw vertical line
      pdfDoc.line(xPos, yPos, xPos, yPos + 8);
-     pdfDoc.text(totalAll.toString(), xPos + colWidths[8] / 2, yPos + 5, {
-       align: "center"
-     });
+     pdfDoc.text(totalAll.toString(), xPos + colWidths[8] / 2, yPos + 5, { align: "center" });
      yPos += 18;
      // Get top teachers by category
      const getTopTeachersByCategory = () => {
@@ -450,7 +391,6 @@ export default function TeacherAttendanceReports() {
        const sortedByTerlambat = [...teachers].sort((a, b) => (b.terlambat || 0) - (a.terlambat || 0)).slice(0, 3);
        const sortedByIzin = [...teachers].sort((a, b) => (b.izin || 0) - (a.izin || 0)).slice(0, 3);
        const sortedByAlpha = [...teachers].sort((a, b) => (b.alpha || 0) - (a.alpha || 0)).slice(0, 3);
-
        return {
          hadir: sortedByHadir,
          terlambat: sortedByTerlambat,
@@ -458,10 +398,9 @@ export default function TeacherAttendanceReports() {
          alpha: sortedByAlpha
        };
      };
-
      const topTeachersByCategory = getTopTeachersByCategory();
      // Add sections for teachers with most attendance in each category
-     const addTeacherCategorySection = (title, teachers, startY) => {
+     const addTeacherCategorySection = (title: string, teachers: any[], startY: number) => {
        pdfDoc.setFontSize(10);
        pdfDoc.setFont("helvetica", "normal");
        pdfDoc.text(title + " Terbanyak :", margin, startY);
@@ -478,9 +417,7 @@ export default function TeacherAttendanceReports() {
          if (i > 0) {
            pdfDoc.line(xPosition, yPosition, xPosition, yPosition + 8);
          }
-         pdfDoc.text(header, xPosition + colWidths[i] / 2, yPosition + 5, {
-           align: "center"
-         });
+         pdfDoc.text(header, xPosition + colWidths[i] / 2, yPosition + 5, { align: "center" });
          xPosition += colWidths[i];
        });
        yPosition += 8;
@@ -491,9 +428,7 @@ export default function TeacherAttendanceReports() {
          pdfDoc.rect(margin, yPosition, colWidths.reduce((a, b) => a + b, 0), 8, "S");
          xPosition = margin;
          // Number
-         pdfDoc.text((index + 1).toString(), xPosition + colWidths[0] / 2, yPosition + 5, {
-           align: "center"
-         });
+         pdfDoc.text((index + 1).toString(), xPosition + colWidths[0] / 2, yPosition + 5, { align: "center" });
          xPosition += colWidths[0];
          pdfDoc.line(xPosition, yPosition, xPosition, yPosition + 8);
          // Name - truncate if too long
@@ -502,16 +437,12 @@ export default function TeacherAttendanceReports() {
          xPosition += colWidths[1];
          pdfDoc.line(xPosition, yPosition, xPosition, yPosition + 8);
          // NIP/NIK
-         pdfDoc.text(teacher.nik || "", xPosition + colWidths[2] / 2, yPosition + 5, {
-           align: "center"
-         });
+         pdfDoc.text(teacher.nik || "", xPosition + colWidths[2] / 2, yPosition + 5, { align: "center" });
          xPosition += colWidths[2];
          pdfDoc.line(xPosition, yPosition, xPosition, yPosition + 8);
          // Role
          const roleText = teacher.role === 'teacher' ? 'Guru' : 'Tendik';
-         pdfDoc.text(roleText, xPosition + colWidths[3] / 2, yPosition + 5, {
-           align: "center"
-         });
+         pdfDoc.text(roleText, xPosition + colWidths[3] / 2, yPosition + 5, { align: "center" });
          xPosition += colWidths[3];
          pdfDoc.line(xPosition, yPosition, xPosition, yPosition + 8);
          // Count - varies depending on section type
@@ -530,9 +461,7 @@ export default function TeacherAttendanceReports() {
              count = teacher.alpha || 0;
              break;
          }
-         pdfDoc.text(count.toString(), xPosition + colWidths[4] / 2, yPosition + 5, {
-           align: "center"
-         });
+         pdfDoc.text(count.toString(), xPosition + colWidths[4] / 2, yPosition + 5, { align: "center" });
          yPosition += 8;
        });
        return yPosition;
@@ -561,33 +490,17 @@ export default function TeacherAttendanceReports() {
      const signatureWidth = (pageWidth - margin * 2) / 2;
      pdfDoc.setFontSize(10);
      pdfDoc.setFont("helvetica", "normal");
-     pdfDoc.text("Mengetahui", signatureWidth * 0.25 + margin, yPos, {
-       align: "center"
-     });
-     pdfDoc.text("Administrator Sekolah", signatureWidth * 1.75 + margin, yPos, {
-       align: "center"
-     });
+     pdfDoc.text("Mengetahui", signatureWidth * 0.25 + margin, yPos, { align: "center" });
+     pdfDoc.text("Administrator Sekolah", signatureWidth * 1.75 + margin, yPos, { align: "center" });
      yPos += 5;
-     pdfDoc.text("KEPALA SEKOLAH,", signatureWidth * 0.25 + margin, yPos, {
-       align: "center"
-     });
-     pdfDoc.text("Absensi Digital,", signatureWidth * 1.75 + margin, yPos, {
-       align: "center"
-     });
+     pdfDoc.text("KEPALA SEKOLAH,", signatureWidth * 0.25 + margin, yPos, { align: "center" });
+     pdfDoc.text("Absensi Digital,", signatureWidth * 1.75 + margin, yPos, { align: "center" });
      yPos += 20;
-     pdfDoc.text(schoolInfo.principalName || "Kepala Sekolah", signatureWidth * 0.25 + margin, yPos, {
-       align: "center"
-     });
-     pdfDoc.text(userData?.name || "Administrator", signatureWidth * 1.75 + margin, yPos, {
-       align: "center"
-     });
+     pdfDoc.text(schoolInfo.principalName || "Kepala Sekolah", signatureWidth * 0.25 + margin, yPos, { align: "center" });
+     pdfDoc.text(userData?.name || "Administrator", signatureWidth * 1.75 + margin, yPos, { align: "center" });
      yPos += 5;
-     pdfDoc.text(`NIP. ${schoolInfo.principalNip || "................................"}`, signatureWidth * 0.25 + margin, yPos, {
-       align: "center"
-     });
-     pdfDoc.text("NIP. ....................................", signatureWidth * 1.75 + margin, yPos, {
-       align: "center"
-     });
+     pdfDoc.text(`NIP. ${schoolInfo.principalNip || "................................"}`, signatureWidth * 0.25 + margin, yPos, { align: "center" });
+     pdfDoc.text("NIP. ....................................", signatureWidth * 1.75 + margin, yPos, { align: "center" });
      // Save the PDF
      const fileName = `Rekap_Kehadiran_Guru_${formattedMonth.replace(' ', '_')}.pdf`;
      pdfDoc.save(fileName);
@@ -628,6 +541,7 @@ export default function TeacherAttendanceReports() {
        const teacherIzin = teacher.izin || 0;
        const teacherAlpha = teacher.alpha || 0;
        const teacherTotal = teacherHadir + teacherTerlambat + teacherIzin + teacherAlpha;
+
        const roleText = teacher.role === 'teacher' ? 'Guru' : 'Tendik';
        // Add to totals
        totalHadir += teacherHadir;
@@ -635,7 +549,6 @@ export default function TeacherAttendanceReports() {
        totalIzin += teacherIzin;
        totalAlpha += teacherAlpha;
        totalAll += teacherTotal;
-
        headerData.push([
          index + 1,
          teacher.name || "nama guru/tendik",
@@ -724,9 +637,7 @@ export default function TeacherAttendanceReports() {
      headerData.push([]);
      headerData.push([]);
      // Add signature
-     const currentDate = format(new Date(), "d MMMM yyyy", {
-       locale: id
-     });
+     const currentDate = format(new Date(), "d MMMM yyyy", { locale: id });
      headerData.push([`${schoolInfo.address}, ${currentDate}`]);
      headerData.push([]);
      headerData.push(["", "Mengetahui", "", "", "", "", "", "Administrator Sekolah"]);
@@ -741,15 +652,15 @@ export default function TeacherAttendanceReports() {
      const ws = XLSX.utils.aoa_to_sheet(headerData);
      // Set column widths
      const colWidths = [
-       { wch: 6 },  // No.
-       { wch: 30 }, // Name
-       { wch: 15 }, // NIP/NIK
-       { wch: 15 }, // Jabatan
-       { wch: 8 },  // Hadir
-       { wch: 12 }, // Terlambat
-       { wch: 8 },  // Izin
-       { wch: 8 },  // Alpha
-       { wch: 8 }   // Total
+       { wch: 6 },   // No.
+       { wch: 30 },  // Name
+       { wch: 15 },  // NIP/NIK
+       { wch: 15 },  // Jabatan
+       { wch: 8 },   // Hadir
+       { wch: 12 },  // Terlambat
+       { wch: 8 },   // Izin
+       { wch: 8 },   // Alpha
+       { wch: 8 }    // Total
      ];
      ws['!cols'] = colWidths;
      // Add worksheet to workbook
@@ -775,7 +686,6 @@ export default function TeacherAttendanceReports() {
        alpha: "0.0"
      };
    }
-
    return {
      hadir: calculatePercentage(attendanceData, 'present'),
      terlambat: calculatePercentage(attendanceData, 'late'),
@@ -783,7 +693,6 @@ export default function TeacherAttendanceReports() {
      alpha: calculatePercentage(attendanceData, 'absent')
    };
  };
-
  const summary = calculateSummary();
  return (
    <div className="w-full max-w-6xl mx-auto px-1 sm:px-4 md:px-6">
@@ -791,75 +700,100 @@ export default function TeacherAttendanceReports() {
        <Link href="/dashboard/absensi-guru" className="p-2 mr-2 hover:bg-gray-100 rounded-full">
          <ArrowLeft size={20} />
        </Link>
-       <h1 className="text-2xl font-bold text-gray-800"><span className="editable-text">Rekap Kehadiran Guru</span></h1>
+       <h1 className="text-2xl font-bold text-gray-800">
+         <span className="editable-text">Rekap Kehadiran Guru</span>
+       </h1>
      </div>
-
      <div className="bg-white rounded-xl shadow-sm p-3 mb-6">
        <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 md:mb-6">
          <div className="flex items-center mb-4 md:mb-0">
            <div className="bg-blue-100 p-2 rounded-lg mr-3">
              <Calendar className="h-6 w-6 text-blue-600" />
            </div>
-           <h2 className="text-xl font-semibold"><span className="editable-text">Bulan : </span>{formattedMonth}</h2>
+           <h2 className="text-xl font-semibold">
+             <span className="editable-text">Bulan : </span>{formattedMonth}
+           </h2>
          </div>
-
          <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-           <button onClick={handlePrevMonth} className="p-2 rounded-md border border-gray-300 hover:bg-gray-50"><span className="editable-text">
-             Sebelumnya
-           </span></button>
-           <button onClick={handleNextMonth} className="p-2 rounded-md border border-gray-300 hover:bg-gray-50"><span className="editable-text">
-             Berikutnya
-           </span></button>
+           <button onClick={handlePrevMonth} className="p-2 rounded-md border border-gray-300 hover:bg-gray-50">
+             <span className="editable-text">Sebelumnya</span>
+           </button>
+           <button onClick={handleNextMonth} className="p-2 rounded-md border border-gray-300 hover:bg-gray-50">
+             <span className="editable-text">Berikutnya</span>
+           </button>
          </div>
        </div>
-
        {/* Attendance Summary Cards */}
        <div className="grid grid-cols-2 gap-4 mb-6">
          <div className="bg-blue-100 p-4 rounded-lg">
-           <h3 className="text-sm font-medium text-gray-700 mb-1"><span className="editable-text">Hadir</span></h3>
+           <h3 className="text-sm font-medium text-gray-700 mb-1">
+             <span className="editable-text">Hadir</span>
+           </h3>
            <p className="text-3xl font-bold text-blue-700">
-             {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.hadir}%`}
+             {loading ? (
+               <span className="animate-pulse">
+                 <span className="editable-text">--.--%</span>
+               </span>
+             ) : (
+               `${summary.hadir}%`
+             )}
            </p>
          </div>
          <div className="bg-amber-100 p-4 rounded-lg">
-           <h3 className="text-sm font-medium text-gray-700 mb-1"><span className="editable-text">Terlambat</span></h3>
+           <h3 className="text-sm font-medium text-gray-700 mb-1">
+             <span className="editable-text">Terlambat</span>
+           </h3>
            <p className="text-3xl font-bold text-amber-700">
-             {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.terlambat}%`}
+             {loading ? (
+               <span className="animate-pulse">
+                 <span className="editable-text">--.--%</span>
+               </span>
+             ) : (
+               `${summary.terlambat}%`
+             )}
            </p>
          </div>
          <div className="bg-green-100 p-4 rounded-lg">
-           <h3 className="text-sm font-medium text-gray-700 mb-1"><span className="editable-text">Izin</span></h3>
+           <h3 className="text-sm font-medium text-gray-700 mb-1">
+             <span className="editable-text">Izin</span>
+           </h3>
            <p className="text-3xl font-bold text-green-700">
-             {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.izin}%`}
+             {loading ? (
+               <span className="animate-pulse">
+                 <span className="editable-text">--.--%</span>
+               </span>
+             ) : (
+               `${summary.izin}%`
+             )}
            </p>
          </div>
          <div className="bg-red-100 p-4 rounded-lg">
-           <h3 className="text-sm font-medium text-gray-700 mb-1"><span className="editable-text">Alpha</span></h3>
+           <h3 className="text-sm font-medium text-gray-700 mb-1">
+             <span className="editable-text">Alpha</span>
+           </h3>
            <p className="text-3xl font-bold text-red-700">
-             {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.alpha}%`}
+             {loading ? (
+               <span className="animate-pulse">
+                 <span className="editable-text">--.--%</span>
+               </span>
+             ) : (
+               `${summary.alpha}%`
+             )}
            </p>
          </div>
        </div>
-
        {/* School Information and Table */}
        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-         {/*<div className="text-center p-4 border-b border-gray-200">
-           <h2 className="text-xl font-bold uppercase">{schoolInfo.name}</h2>
-           <p className="text-gray-600 font-medium">{schoolInfo.address}</p>
-         </div>*/}
-
-          <div className="text-center p-4">
-            <h2 className="text-gray-700 sm:text-xl font-bold uppercase">{schoolInfo.name}</h2>
-            <p className="text-gray-700 font-bold">{schoolInfo.address}</p>
-            <p className="text-gray-700 font-bold">NPSN : {schoolInfo.npsn}</p>
-          </div>
-          <hr className="border-t border-gray-400 mt-1 mb-6" />
-          <div className="text-center mb-4 sm:mb-6">
-           
-            <h3 className="text-gray-700 uppercase">REKAP LAPORAN KEHADIRAN GURU</h3>
-            <p className="text-gray-700">BULAN {formattedMonth.toUpperCase()}</p>
-          </div>
-
+         <div className="text-center p-4">
+           <h2 className="text-gray-700 sm:text-xl font-bold uppercase">{schoolInfo.name}</h2>
+           <p className="text-gray-700 font-bold">{schoolInfo.address}</p>
+           <p className="text-gray-700 font-bold">NPSN : {schoolInfo.npsn}</p>
+         </div>
+         <hr className="border-t border-gray-600 mt-1 mb-6" />
+         <div className="text-center mb-4 sm:mb-6">
+           <h3 className="text-gray-700 uppercase">REKAP LAPORAN KEHADIRAN GURU</h3>
+           <p className="text-gray-700">BULAN {formattedMonth.toUpperCase()}</p>
+         </div>
          {loading ? (
            <div className="flex justify-center items-center h-64">
              <Loader2 className="h-12 w-12 text-primary animate-spin" />
@@ -869,44 +803,63 @@ export default function TeacherAttendanceReports() {
              <table className="min-w-full border">
                <thead>
                  <tr className="bg-green-100">
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Nama</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">NIK</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Jabatan</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Hadir</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Terlambat</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Izin</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Alpha</span></th>
-                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700"><span className="editable-text">Total</span></th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Nama</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">NIK</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Jabatan</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Hadir</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Terlambat</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Izin</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Alpha</span>
+                   </th>
+                   <th className="border px-2 py-2 text-center text-sm font-bold text-gray-700">
+                     <span className="editable-text">Total</span>
+                   </th>
                  </tr>
                </thead>
                <tbody>
-                 {filteredTeachers.length > 0 ? filteredTeachers.map((teacher, index) => (
-                   <tr key={teacher.id} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm">{teacher.name}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.nik}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">
-                       {teacher.role === 'teacher' ? 'Guru' : 'Tendik'}
-                     </td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.hadir}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.terlambat}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.izin}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.alpha}</td>
-                     <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">
-                       {(teacher.hadir || 0) + (teacher.terlambat || 0) + (teacher.izin || 0) + (teacher.alpha || 0)}
-                     </td>
-                   </tr>
-                 )) : (
+                 {filteredTeachers.length > 0 ? (
+                   filteredTeachers.map((teacher, index) => (
+                     <tr key={teacher.id} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm">{teacher.name}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.nik}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">
+                         {teacher.role === 'teacher' ? 'Guru' : 'Tendik'}
+                       </td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.hadir}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.terlambat}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.izin}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">{teacher.alpha}</td>
+                       <td className="text-gray-600 border px-2 py-1 text-xs sm:text-sm text-center">
+                         {(teacher.hadir || 0) + (teacher.terlambat || 0) + (teacher.izin || 0) + (teacher.alpha || 0)}
+                       </td>
+                     </tr>
+                   ))
+                 ) : (
                    <tr>
-                     <td colSpan={8} className="border px-4 py-4 text-center text-gray-500"><span className="editable-text">
-                       Tidak ada data kehadiran yang ditemukan
-                     </span></td>
+                     <td colSpan={8} className="border px-4 py-4 text-center text-gray-500">
+                       <span className="editable-text">Tidak ada data kehadiran yang ditemukan</span>
+                     </td>
                    </tr>
                  )}
-
                  {/* Total row */}
                  {filteredTeachers.length > 0 && (
                    <tr className="bg-gray-200 font-medium">
-                     <td colSpan={3} className="border px-2 py-2 font-bold text-sm text-center"><span className="editable-text">TOTAL</span></td>
+                     <td colSpan={3} className="border px-2 py-2 font-bold text-sm text-center">
+                       <span className="editable-text">TOTAL</span>
+                     </td>
                      <td className="border px-2 py-2 text-center font-bold text-sm">
                        {filteredTeachers.reduce((sum, teacher) => sum + (teacher.hadir || 0), 0)}
                      </td>
@@ -934,7 +887,6 @@ export default function TeacherAttendanceReports() {
          )}
        </div>
      </div>
-
      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-20 md:mb-6">
        <button
          onClick={handleDownloadPDF}
@@ -942,16 +894,19 @@ export default function TeacherAttendanceReports() {
          className="flex items-center justify-center gap-3 bg-red-600 text-white p-4 rounded-xl hover:bg-red-700 transition-colors"
        >
          {isDownloading ? <Loader2 className="h-6 w-6 animate-spin" /> : <FileText className="h-6 w-6" />}
-         <span className="font-medium"><span className="editable-text">Download Laporan PDF</span></span>
+         <span className="font-medium">
+           <span className="editable-text">Download Laporan PDF</span>
+         </span>
        </button>
-
        <button
          onClick={handleDownloadExcel}
          disabled={isDownloading}
          className="flex items-center justify-center gap-3 bg-green-600 text-white p-4 rounded-xl hover:bg-green-700 transition-colors"
        >
          {isDownloading ? <Loader2 className="h-6 w-6 animate-spin" /> : <FileSpreadsheet className="h-6 w-6" />}
-         <span className="font-medium"><span className="editable-text">Download Laporan Excel</span></span>
+         <span className="font-medium">
+           <span className="editable-text">Download Laporan Excel</span>
+         </span>
        </button>
      </div>
    </div>
