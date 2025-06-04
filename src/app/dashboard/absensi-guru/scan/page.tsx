@@ -543,8 +543,8 @@ export default function TeacherAttendanceScan() {
 
      // Add reason if it's an izin type
      if (attendanceType === 'izin' && reason) {
-       message += `\nAlasan Izin : "${reason}"`;
-     }.
+       message += `\nAlasan Izin : "${reason}".`;
+     }
      // Send notification
      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
        method: 'POST',
