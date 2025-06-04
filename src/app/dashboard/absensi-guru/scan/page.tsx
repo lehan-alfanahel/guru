@@ -520,7 +520,19 @@ export default function TeacherAttendanceScan() {
        console.error("No chat ID found for notification");
        return;
      }
-   
+
+
+
+
+
+
+
+
+
+
+
+
+    
      // Format message based on attendance type
      let messageType = "";
      if (attendanceType === 'in') messageType = 'MASUK';
@@ -574,12 +586,12 @@ export default function TeacherAttendanceScan() {
          </div>
          <h2 className="text-2xl font-bold text-gray-800 mb-2"><span className="editable-text">Absensi Berhasil!</span></h2>
          <p className="text-gray-600 mb-6">
-           GTK dengan nama {recognizedTeacher?.name}<span className="editable-text"> telah berhasil melakukan "Absensi </span>{
-             attendanceType === 'in' ? 'Masuk' :
-             attendanceType === 'out' ? 'Pulang' :
-             'Izin'
-           }
-           {attendanceType === 'izin' && izinReason ? ` dengan alasan "${izinReason}"` : ''}".
+           GTK dengan nama {recognizedTeacher?.name}<span className="editable-text"> telah berhasil melakukan Absensi </span>"{
+             attendanceType === 'in' ? 'MASUK' :
+             attendanceType === 'out' ? 'PULANG' :
+             'IZIN'
+           }"
+           {attendanceType === 'izin' && izinReason ? ` dengan alasan : "${izinReason}"` : ''}.
          </p>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
            <button onClick={resetProcess} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-blue-700 transition-colors"><span className="editable-text">
