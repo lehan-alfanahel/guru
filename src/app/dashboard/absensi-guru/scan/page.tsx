@@ -675,7 +675,7 @@ export default function TeacherAttendanceScan() {
                  value={alphaReason}
                  onChange={(e) => setAlphaReason(e.target.value)}
                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"
-                 placeholder="Masukkan alasan alpha. Contoh : tidak masuk tanpa keterangan, dll."
+                 placeholder="Masukkan alasan Alpha. Contoh : tidak masuk tanpa keterangan, dll."
                  rows={3}
                  required={attendanceType === 'alpha'}
                />
@@ -738,14 +738,14 @@ export default function TeacherAttendanceScan() {
            {attendanceType === 'izin' && (
              <div className="p-3 mb-3 rounded-lg flex items-center bg-amber-100 text-amber-700">
                <FileText className="h-5 w-5 mr-2" />
-               <p className="text-sm">Anda akan melakukan absensi dengan status izin. Harap isi alasan izin dengan lengkap.</p>
+               <p className="text-sm">Anda akan melakukan absensi dengan status Izin. Harap isi alasan Izin dengan lengkap.</p>
              </div>
            )}
            {/* Special notice for Alpha */}
            {attendanceType === 'alpha' && (
              <div className="p-3 mb-3 rounded-lg flex items-center bg-red-100 text-red-700">
                <UserX className="h-5 w-5 mr-2" />
-               <p className="text-sm">Anda akan melakukan absensi dengan status alpha. Harap isi alasan alpha dengan lengkap.</p>
+               <p className="text-sm">Anda akan melakukan absensi dengan status Alpha. Harap isi alasan Alpha dengan lengkap.</p>
              </div>
            )}
            {/* Recognized teacher */}
