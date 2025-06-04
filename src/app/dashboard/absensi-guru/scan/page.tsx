@@ -634,7 +634,7 @@ export default function TeacherAttendanceScan() {
                </button>
                <button
                  onClick={() => setAttendanceType("alpha")}
-                 className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                 className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
                    attendanceType === "alpha" ? "bg-green-600 text-white" : "bg-white text-gray-700"
                  }`}
                >
