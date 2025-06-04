@@ -856,7 +856,7 @@ export default function TeacherAttendanceReports() {
           <hr className="border-t border-gray-600 mt-1 mb-6" />
           <div className="text-center mb-4 sm:mb-6">
            
-            <h3 className="text-gray-700 uppercase">REKAP LAPORAN KEHADIRAN GURU DAN TENDIK</h3>
+            <h3 className="text-gray-700 uppercase">REKAP LAPORAN KEHADIRAN GURU</h3>
             <p className="text-gray-700">BULAN {formattedMonth.toUpperCase()}</p>
           </div>
 
