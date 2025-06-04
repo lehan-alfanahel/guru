@@ -606,7 +606,7 @@ export default function TeacherAttendanceScan() {
          </div>
        </motion.div> : <div className="bg-white rounded-xl shadow-md overflow-hidden">
          <div className="p-4 border-b border-gray-200">
-           <center><h2 className="text-lg text-gray-600 font-semibold mb-4"><span className="editable-text">Pilih Jenis Absensi</span></h2></center>
+           <center><h2 className="text text-gray-700 font-semibold mb-4"><span className="editable-text">PILIH JENIS ABSENSI</span></h2></center>
 
            {/* Attendance type selector */}
            <div className="flex items-center justify-center p-3 bg-gray-100 rounded-lg mb-4">
