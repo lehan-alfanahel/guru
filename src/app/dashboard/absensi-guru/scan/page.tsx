@@ -591,7 +591,7 @@ return <div className="max-w-3xl mx-auto pb-20 md:pb-6 px-1 sm:px-4 md:px-6">
           <Link href="https://t.me/AbsenModernBot" target="_blank" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
             <span className="editable-text">Lihat Hasil Absensi</span>
           </Link>
-          <Link href="/dashboard/absensi-guru/scan" className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center"><span className="editable-text">
+          <Link href="/dashboard" className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center"><span className="editable-text">
             Kembali
           </span></Link>
         </div>
