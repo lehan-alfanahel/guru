@@ -237,7 +237,7 @@ export default function TeacherAttendanceReports() {
      // Add title
      pdfDoc.setFontSize(12);
      pdfDoc.setFont("helvetica", "normal");
-     pdfDoc.text("REKAPITULASI LAPORAN ABSENSI GURU DAN TENAGA KEPENDIDIKAN", pageWidth / 2, margin + 30, { align: "center" });
+     pdfDoc.text("REKAPITULASI LAPORAN ABSENSI GURU", pageWidth / 2, margin + 30, { align: "center" });
      pdfDoc.text(`BULAN ${formattedMonth.toUpperCase()}`, pageWidth / 2, margin + 36, { align: "center" });
      // Main attendance table
      let yPos = margin + 43;
@@ -523,7 +523,7 @@ export default function TeacherAttendanceReports() {
        [schoolInfo.address],
        [`NPSN: ${schoolInfo.npsn}`],
        [""],
-       ["REKAPITULASI LAPORAN ABSENSI GURU DAN TENAGA KEPENDIDIKAN"],
+       ["REKAPITULASI LAPORAN ABSENSI GURU"],
        [`BULAN ${formattedMonth.toUpperCase()}`],
        [""],
        ["No.", "Nama Guru/Tendik", "NIK", "Jabatan", "Hadir", "Terlambat", "Izin", "Alpha", "Total"]
