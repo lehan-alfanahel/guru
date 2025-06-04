@@ -544,7 +544,7 @@ export default function TeacherAttendanceScan() {
      // Add reason if it's an izin type
      if (attendanceType === 'izin' && reason) {
        message += `\nAlasan Izin : "${reason}"`;
-     }
+     }.
      // Send notification
      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
        method: 'POST',
@@ -678,7 +678,7 @@ export default function TeacherAttendanceScan() {
                  {/* Photo capture guide overlay */}
                  {!cameraError && <div className="absolute inset-0 flex items-center justify-center">
                      <div className="absolute bottom-1 left-0 right-0 text-center">
-                       <p className="text-gray-400 text-sm bg-black bg-opacity-50 inline-block px-3 py-1 rounded-full"><span className="editable-text">
+                       <p className="text-gray-400 text-sm bg-black bg-opacity-50 inline-block px-3 py-2 rounded-full"><span className="editable-text">
                          Posisikan diri Anda dengan jelas
                        </span></p>
                      </div>
