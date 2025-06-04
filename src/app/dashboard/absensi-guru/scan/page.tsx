@@ -516,7 +516,7 @@ export default function TeacherAttendanceScan() {
      else if (attendanceType === 'izin') messageType = 'IZIN';
      else if (attendanceType === 'alpha') messageType = 'ALPHA';
      let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini tanggal ${date} pukul ${time} WIB.`;
-     break; // Add reason if it's an izin or alpha type
+      // Add reason if it's an izin or alpha type
      if ((attendanceType === 'izin' || attendanceType === 'alpha') && reason) {
        message += `\nAlasan ${messageType} : "${reason}".`;
      }
