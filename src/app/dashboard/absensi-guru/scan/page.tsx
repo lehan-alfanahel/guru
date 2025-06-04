@@ -532,7 +532,7 @@ const sendTelegramNotification = async (
     if (attendanceType === 'in') messageType = 'MASUK';
     else if (attendanceType === 'out') messageType = 'PULANG';
     else if (attendanceType === 'izin') messageType = 'IZIN';
-    let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini, tanggal ${date} pukul ${time} WIB.`;
+    let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini tanggal ${date} pukul ${time} WIB.`;
     // Add reason if it's an izin type
     if (attendanceType === 'izin' && reason) {
       message += `\nAlasan Izin : "${reason}".`;
