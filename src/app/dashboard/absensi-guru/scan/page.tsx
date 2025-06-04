@@ -520,18 +520,7 @@ export default function TeacherAttendanceScan() {
        console.error("No chat ID found for notification");
        return;
      }
-
-
-
-
-      
-const currentDateTime = new Date(); 
-const formattedDate = format(currentDateTime, "EEEE, d MMMM yyyy", { locale: id }); 
-const formattedTime = format(currentDateTime, "HH:mm:ss"); 
-
-      
-
-    
+   
      // Format message based on attendance type
      let messageType = "";
      if (attendanceType === 'in') messageType = 'MASUK';
