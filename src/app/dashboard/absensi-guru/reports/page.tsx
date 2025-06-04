@@ -641,7 +641,7 @@ export default function TeacherAttendanceReports() {
      //headerData.push([`${schoolInfo.address}, ${currentDate}`]);
      headerData.push([]);
      headerData.push(["", "Mengetahui", "", "", "", "", "", "Administrator Sekolah"]);
-     headerData.push(["", "KEPALA SEKOLAH,", "", "", "", "", "", "Nama Sekolah,"]);
+     headerData.push(["", "Kepala Sekolah,", "", "", "", "", "", "Absensi Digital,"]);
      headerData.push([]);
      headerData.push([]);
      headerData.push([]);
