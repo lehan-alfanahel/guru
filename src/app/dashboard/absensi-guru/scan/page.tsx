@@ -579,7 +579,7 @@ export default function TeacherAttendanceScan() {
              attendanceType === 'out' ? 'Pulang' :
              'Izin'
            }
-           {attendanceType === 'izin' && IzinReason ? ` dengan alasan "${IzinReason}"` : ''}".
+           {attendanceType === 'izin' && izinReason ? ` dengan alasan "${izinReason}"` : ''}".
          </p>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
            <button onClick={resetProcess} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-blue-700 transition-colors"><span className="editable-text">
