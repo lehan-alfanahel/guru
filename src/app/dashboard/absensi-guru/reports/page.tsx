@@ -827,7 +827,7 @@ export default function TeacherAttendanceReports() {
              {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.terlambat}%`}
            </p>
          </div>
-         {/*<div className="bg-green-100 p-4 rounded-lg">
+         <div className="bg-green-100 p-4 rounded-lg">
            <h3 className="text-sm font-medium text-gray-700 mb-1"><span className="editable-text">Izin</span></h3>
            <p className="text-3xl font-bold text-green-700">
              {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.izin}%`}
@@ -838,7 +838,7 @@ export default function TeacherAttendanceReports() {
            <p className="text-3xl font-bold text-red-700">
              {loading ? <span className="animate-pulse"><span className="editable-text">--.--%</span></span> : `${summary.alpha}%`}
            </p>
-         </div>*/}
+         </div>
        </div>
 
        {/* School Information and Table */}
