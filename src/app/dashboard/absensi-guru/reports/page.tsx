@@ -786,15 +786,15 @@ export default function TeacherAttendanceReports() {
 
  const summary = calculateSummary();
  return (
-   <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+   <div className="w-full max-w-6xl mx-auto px-1 sm:px-4 md:px-6">
      <div className="flex items-center mb-6">
        <Link href="/dashboard/absensi-guru" className="p-2 mr-2 hover:bg-gray-100 rounded-full">
          <ArrowLeft size={20} />
        </Link>
-       <h1 className="text-2xl font-bold text-gray-800"><span className="editable-text">Rekap Kehadiran Guru dan Tendik</span></h1>
+       <h1 className="text-2xl font-bold text-gray-800"><span className="editable-text">Rekap Kehadiran Guru</span></h1>
      </div>
 
-     <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+     <div className="bg-white rounded-xl shadow-sm p-3 mb-6">
        <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 md:mb-6">
          <div className="flex items-center mb-4 md:mb-0">
            <div className="bg-blue-100 p-2 rounded-lg mr-3">
