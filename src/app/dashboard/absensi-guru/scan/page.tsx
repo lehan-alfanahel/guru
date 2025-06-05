@@ -219,13 +219,13 @@ export default function TeacherAttendanceScan() {
      const effectiveDistance = Math.max(0, distance - accuracy);
 
      if (effectiveDistance <= settings.radius) {
-       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
        }
      }
    } else {
@@ -926,7 +926,7 @@ export default function TeacherAttendanceScan() {
                        {locationMessage || "Mencari lokasi..."}
                      </span>
                    ) : (
-                     locationMessage || "Lokasi belum terdeteksi ..."
+                     locationMessage || "Lokasi Belum Terdeteksi..."
                    )}
                  </p>
                </div>
