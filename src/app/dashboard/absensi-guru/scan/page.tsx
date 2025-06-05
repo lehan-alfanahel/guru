@@ -219,17 +219,17 @@ export default function TeacherAttendanceScan() {
      const effectiveDistance = Math.max(0, distance - accuracy);
 
      if (effectiveDistance <= settings.radius) {
-       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
+       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
+         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
+         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
        }
      }
    } else {
-     setLocationMessage(`📍 Posisi anda terdeteksi (akurasi : ±${Math.round(accuracy)}m), akan tapi lokasi sekolah belum diatur.`);
+     setLocationMessage(`📍 Posisi anda terdeteksi (Akurasi : ±${Math.round(accuracy)} meter), akan tapi lokasi sekolah belum diatur.`);
    }
  };
  // Enhanced error handling
@@ -926,7 +926,7 @@ export default function TeacherAttendanceScan() {
                        {locationMessage || "Mencari lokasi..."}
                      </span>
                    ) : (
-                     locationMessage || "Lokasi belum terdeteksi..."
+                     locationMessage || "Lokasi belum terdeteksi ..."
                    )}
                  </p>
                </div>
