@@ -396,17 +396,17 @@ export default function TeacherAttendanceSettings() {
                 <h2 className="text-lg font-semibold mb-6" data-unique-id="ba87a4f5-ac49-4bb8-a20f-e1cc89275a88" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="de5d1f5c-47b8-4413-9d94-963fccf9fa92" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Telegram</span></h2>
                 
                 <div className="mb-6" data-unique-id="8c00bd5f-1356-45ad-8615-73633d63f0e9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                  {/*<div className="flex items-start bg-blue-50 p-4 rounded-lg mb-6" data-unique-id="a70b5fb3-32be-4d72-b796-643d8ccea97a" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                  <div className="flex items-start bg-blue-50 p-4 rounded-lg mb-6" data-unique-id="a70b5fb3-32be-4d72-b796-643d8ccea97a" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
                     <div data-unique-id="5edf4510-071c-4254-baae-4b83f15d7def" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                       <h4 className="font-medium text-blue-700" data-unique-id="aff650cc-e14f-41ee-a71e-28dd9d1f42a9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="65b91cb3-4492-4c5d-9181-dc8a32163f4e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Informasi Bot Telegram</span></h4>
                       <p className="text-sm text-blue-600 mt-1" data-unique-id="1d4744f8-6a4c-4c42-b2f1-a3ca44fce92e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="e5579d78-4104-4aad-8f3a-31640f217246" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                         Untuk mendapatkan ID Chat, silakan kirim pesan ke 
                         </span><a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline mx-1" data-unique-id="b4a3c910-5415-4c03-9dcb-ac58f71c942f" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="fc95b12c-730b-4654-82ac-866287521204" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">@userinfobot</span></a><span className="editable-text" data-unique-id="9cf95e31-ac8d-496c-8a24-dc328277bcb1" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                        dan masukkan ID yang diberikan oleh bot.
+                        dan masukkan ID Telegram yang diberikan oleh userinfobot ke dalam ID Chat Telegram di bawah.
                       </span></p>
                     </div>
-                  </div>*/}
+                  </div>
                   
                   <div className="grid grid-cols-1 gap-4 mb-6" data-unique-id="9c5900b0-da84-4caf-bfe6-4b3392813b54" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
                     {/* Bot Token */}
@@ -423,7 +423,7 @@ export default function TeacherAttendanceSettings() {
                     {/* Chat ID */}
                     <div data-unique-id="a4670cde-f7b7-40f6-bf42-036162326337" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                       <label htmlFor="chatId" className="block text-sm font-medium text-gray-700 mb-1" data-unique-id="cd1377d2-ef79-49b7-be34-e1143b778a88" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="b1662f0e-aa2d-44f6-812b-034dca7065d0" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                        ID Chat Kepala Sekolah
+                        ID Chat Telegram
                       </span></label>
                       <input type="text" id="chatId" name="chatId" value={telegramSettings.chatId} onChange={handleTelegramChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" placeholder="Contoh: 123456789" required data-unique-id="78531995-33df-40d5-898b-a358a05ad4e8" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" />
                     </div>
