@@ -223,13 +223,13 @@ export default function TeacherAttendanceScan() {
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi anda saat ini mendekati Area Sekolah dengan jarak akurasi : ±${Math.round(distance)} meter.`);
+         setLocationMessage(`⚠️ Lokasi anda saat ini mendekati Area Sekolah dengan jarak radius akurasi : ±${Math.round(distance)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi anda saat ini berada di luar Area Sekolah dengan jarak akurasi : ±${Math.round(distance)} meter.`);
+         setLocationMessage(`❌ Lokasi anda saat ini berada di Luar Area Sekolah dengan jarak radius akurasi : ±${Math.round(distance)} meter.`);
        }
      }
    } else {
-     setLocationMessage(`📍 Posisi anda sudah terdeteksi (Akurasi : ±${Math.round(accuracy)} meter), akan tapi lokasi sekolah belum diatur.`);
+     setLocationMessage(`📍 Posisi anda sudah terdeteksi (Akurasi : ±${Math.round(accuracy)} meter), akan tapi Lokasi sekolah belum diatur.`);
    }
  };
  // Enhanced error handling
