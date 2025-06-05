@@ -286,7 +286,7 @@ export default function TeacherAttendanceSettings() {
             {activeTab === 'location' && <div data-unique-id="99f217ce-4fba-4b1a-b844-a23335ec704b" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
                 <h2 className="text-lg font-semibold mb-6" data-unique-id="9b63db92-73c2-4956-8c5f-dad2c237ebef" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="d1a98272-b17e-4eec-a3ef-d708b40b6cc0" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Lokasi Sekolah</span></h2>
                 
-                <div className="mb-6" data-unique-id="0e0a9a34-79cb-4b53-925d-faf88f6dffee" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                <div className="mb-2" data-unique-id="0e0a9a34-79cb-4b53-925d-faf88f6dffee" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <p className="text-gray-600 mb-4" data-unique-id="7ee5ce92-9194-4cdc-92ef-64d9f2443096" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="1bdc8975-ca6e-4e11-92df-1132085ef266" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     Tentukan lokasi sekolah dan radius (dalam meter) di mana absensi diizinkan.
                     Guru hanya dapat melakukan absensi jika berada dalam radius yang ditentukan.
@@ -318,7 +318,7 @@ export default function TeacherAttendanceSettings() {
                 {/* Radius */}
                 <div className="mb-6" data-unique-id="4f6922d6-ccf8-4062-ae4a-32bd438e0649" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <label htmlFor="radius" className="block text-sm font-medium text-gray-700 mb-1" data-unique-id="d53e3d98-122d-486c-bf0b-59d365f579a2" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="86b4645e-297d-4f17-8b64-af71f3cc220c" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                    Radius Absensi (dalam meter)
+                    Radius Absensi (Dalam Meter)
                   </span></label>
                   <input type="range" id="radius" name="radius" min="50" max="500" step="10" value={locationSettings.radius} onChange={handleLocationChange} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-unique-id="d3c267b1-7590-43d0-b43f-4eb68cba3d4f" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" />
                   <div className="flex justify-between mt-2" data-unique-id="14633b9e-1115-4db4-bd7e-166d1de9498d" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
@@ -330,7 +330,7 @@ export default function TeacherAttendanceSettings() {
                 
                 <div data-unique-id="3c288c76-d41e-4642-8a08-17d1c69a15bc" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <h3 className="text-md font-semibold mb-1" data-unique-id="0dd17e94-6aef-4318-83c6-cba82b03e0e1" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="3e5bce27-a869-4542-8149-70f7a448293b" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Lokasi yang akan diterapkan:</span></h3>
-                  <p className="text-gray-600" data-unique-id="c58a1089-8e11-465e-8d3f-ff47f744da81" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
+                  <p className="text-gray-600 text-sm" data-unique-id="c58a1089-8e11-465e-8d3f-ff47f744da81" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
                     {locationSettings.latitude === 0 && locationSettings.longitude === 0 ? "Lokasi belum diatur" : `${locationSettings.latitude}, ${locationSettings.longitude} (Radius: ${locationSettings.radius}m)`}
                   </p>
                 </div>
@@ -338,9 +338,9 @@ export default function TeacherAttendanceSettings() {
             
             {/* Time Settings */}
             {activeTab === 'time' && <div data-unique-id="5d4a509f-d2d3-433f-a773-ac93b55f9ce5" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                <h2 className="text-lg font-semibold mb-6" data-unique-id="ad49804b-5394-4e63-b567-71b315165aac" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="f974af7e-ecb1-4f32-8189-09eea0a0e77e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Jam Kerja</span></h2>
+                <h2 className="text-lg font-semibold mb-4" data-unique-id="ad49804b-5394-4e63-b567-71b315165aac" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="f974af7e-ecb1-4f32-8189-09eea0a0e77e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Jam Kerja</span></h2>
                 
-                <div className="mb-6" data-unique-id="2925b35b-07c1-4632-85ef-6981a1ae1298" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                <div className="mb-4" data-unique-id="2925b35b-07c1-4632-85ef-6981a1ae1298" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <p className="text-gray-600 mb-4" data-unique-id="1c7c79df-c844-4175-9559-6a9d231b4ad3" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="1233e92b-c37a-4e56-8356-5f02de175aa5" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     Atur jam absensi masuk dan pulang. Guru hanya dapat
                     melakukan absensi dalam rentang waktu yang ditentukan.
@@ -395,7 +395,7 @@ export default function TeacherAttendanceSettings() {
             {activeTab === 'telegram' && <div data-unique-id="5cdae872-6ead-4913-802d-9cafa7ed417e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                 <h2 className="text-lg font-semibold mb-6" data-unique-id="ba87a4f5-ac49-4bb8-a20f-e1cc89275a88" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="de5d1f5c-47b8-4413-9d94-963fccf9fa92" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Telegram</span></h2>
                 
-                <div className="mb-6" data-unique-id="8c00bd5f-1356-45ad-8615-73633d63f0e9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                <div className="mb-4" data-unique-id="8c00bd5f-1356-45ad-8615-73633d63f0e9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <div className="flex items-start bg-blue-50 p-4 rounded-lg mb-6" data-unique-id="a70b5fb3-32be-4d72-b796-643d8ccea97a" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
             {/*<AlertCircle className="h-5 w-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />*/}
                     <div data-unique-id="5edf4510-071c-4254-baae-4b83f15d7def" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
@@ -408,7 +408,7 @@ export default function TeacherAttendanceSettings() {
 
 
                       <p className="text-sm text-blue-600 mt-1" data-unique-id="1d4744f8-6a4c-4c42-b2f1-a3ca44fce92e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="e5579d78-4104-4aad-8f3a-31640f217246" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                        Untuk mendapatkan ID Chat Grup Telegram agar memudahkan info notifikasi absensi terkirim ke dalam Grup, silahkan hubungi Admin melalui chat :  
+                        Untuk mendapatkan ID Chat Grup Telegram agar memudahkan info notifikasi absensi terkirim ke dalam Grup, silahkan hubungi Admin melalui chat 
                         </span><a href="https://wa.me/6281272405881?text=Halo%2C%20saya%20guru%20dari%20sekolah%20yang%20menggunakan%20aplikasi%20Absensi%20Digital.%20Saya%20ingin%20dibuatkan%20Grup%20Telegram%20untuk%20Absensi%20Guru." target="_blank" rel="noopener noreferrer" className="text-blue-700 underline mx-1" data-unique-id="b4a3c910-5415-4c03-9dcb-ac58f71c942f" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="fc95b12c-730b-4654-82ac-866287521204" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">WhatsApp</span></a><span className="editable-text" data-unique-id="9cf95e31-ac8d-496c-8a24-dc328277bcb1" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                         agar dibuatkan Grup Telegram dan diberikan ID Chat Grup Telegram.
                       </span></p>
