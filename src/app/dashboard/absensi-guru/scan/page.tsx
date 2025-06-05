@@ -223,9 +223,9 @@ export default function TeacherAttendanceScan() {
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+         setLocationMessage(`⚠️ Lokasi anda mendekati Area Sekolah dengan Jarak sekitar : ${Math.round(distance)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan Jarak sekitar : ${Math.round(distance)} meter.`);
        }
      }
    } else {
