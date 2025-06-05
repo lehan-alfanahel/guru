@@ -552,7 +552,7 @@ export default function TeacherAttendanceScan() {
        if (effectiveDistance > settings.radius) {
          const excess = effectiveDistance - settings.radius;
          if (excess > (locationAccuracy || 0)) {
-           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)} meter, dengan ketepatan akurasi : ±${Math.round(locationAccuracy || 0)} meter.`);
+           toast.error(`Anda berada di Luar area Absensi Sekolah, dengan jarak sekitar : ±${Math.round(distance)} meter, dengan ketepatan akurasi : ±${Math.round(locationAccuracy || 0)} meter.`);
            setProcessingCapture(false);
            return;
          } else {
