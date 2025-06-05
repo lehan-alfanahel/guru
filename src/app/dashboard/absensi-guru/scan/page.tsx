@@ -225,7 +225,7 @@ export default function TeacherAttendanceScan() {
        if (excess <= accuracy) {
          setLocationMessage(`⚠️ Lokasi anda saat ini mendekati Area Sekolah dengan jarak radius akurasi : ±${Math.round(distance)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi anda saat ini berada di Luar Area Sekolah dengan jarak radius akurasi : ±${Math.round(distance)} meter.`);
+         setLocationMessage(`❌ Lokasi anda saat ini berada pada Luar Area Sekolah dengan radius akurasi : ±${Math.round(distance)} meter.`);
        }
      }
    } else {
