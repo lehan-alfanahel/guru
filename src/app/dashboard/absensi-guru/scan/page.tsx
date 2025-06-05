@@ -219,7 +219,7 @@ export default function TeacherAttendanceScan() {
      const effectiveDistance = Math.max(0, distance - accuracy);
 
      if (effectiveDistance <= settings.radius) {
-       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan Jarak : ${Math.round(distance)} meter, Akurasi : ±${Math.round(accuracy)} meter.`);
+       setLocationMessage(`✅ Lokasi anda sekarang terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)} meter, radius akurasi : ±${Math.round(accuracy)} meter.`);
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
