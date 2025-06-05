@@ -397,7 +397,7 @@ export default function TeacherAttendanceSettings() {
                 
                 <div className="mb-6" data-unique-id="8c00bd5f-1356-45ad-8615-73633d63f0e9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                   <div className="flex items-start bg-blue-50 p-4 rounded-lg mb-6" data-unique-id="a70b5fb3-32be-4d72-b796-643d8ccea97a" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                    <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
+            {/*<AlertCircle className="h-5 w-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />*/}
                     <div data-unique-id="5edf4510-071c-4254-baae-4b83f15d7def" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                       <h4 className="font-medium text-blue-700" data-unique-id="aff650cc-e14f-41ee-a71e-28dd9d1f42a9" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="65b91cb3-4492-4c5d-9181-dc8a32163f4e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Informasi Bot Telegram</span></h4>
                       <p className="text-sm text-blue-600 mt-1" data-unique-id="1d4744f8-6a4c-4c42-b2f1-a3ca44fce92e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="e5579d78-4104-4aad-8f3a-31640f217246" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
