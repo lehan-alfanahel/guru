@@ -552,7 +552,7 @@ export default function TeacherAttendanceScan() {
        if (effectiveDistance > settings.radius) {
          const excess = effectiveDistance - settings.radius;
          if (excess > (locationAccuracy || 0)) {
-           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)}m (akurasi: ±${Math.round(locationAccuracy || 0)}m)`);
+           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)} meter, dengan ketepatan akurasi: ±${Math.round(locationAccuracy || 0)} meter.`);
            setProcessingCapture(false);
            return;
          } else {
@@ -890,7 +890,7 @@ export default function TeacherAttendanceScan() {
                  {!cameraError && (
                    <div className="absolute inset-0 flex items-center justify-center">
                      <div className="absolute bottom-1 left-0 right-0 text-center">
-                       <p className="text-gray-400 text-sm bg-black bg-opacity-50 inline-block px-3 py-2 rounded-full">
+                       <p className="text-gray-400 text-sm bg-black bg-opacity-20 inline-block px-3 py-2 rounded">
                          <span className="editable-text">Posisikan diri Anda dengan jelas</span>
                        </p>
                      </div>
@@ -902,7 +902,7 @@ export default function TeacherAttendanceScan() {
              ) : (
                <div className="flex flex-col items-center justify-center h-full">
                  <Camera size={48} className="text-gray-400 mb-4" />
-                 <p className="text-gray-400"><span className="editable-text">Kamera belum diaktifkan</span></p>
+                 <p className="text-gray-400"><span className="editable-text">Kamera Belum Diaktifkan</span></p>
                </div>
              )}
              {/* Hidden canvas for processing */}
