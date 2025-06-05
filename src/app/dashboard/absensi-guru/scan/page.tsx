@@ -702,7 +702,7 @@ const sendTelegramNotification = async (
     let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini, ${dayName} tanggal ${date} pukul ${time} WIB.`;
     // Add location accuracy info for location-based attendance
     if (attendanceType !== 'izin' && attendanceType !== 'alpha' && locationAccuracy) {
-      message += `\n📍 Akurasi Lokasi : ±${Math.round(locationAccuracy)} meter.`;
+      message += `\n📍 Akurasi Lokasi : ± ${Math.round(locationAccuracy)} meter.`;
     }
     // Add reason if it's an izin or alpha type
     if ((attendanceType === 'izin' || attendanceType === 'alpha') && reason) {
