@@ -54,7 +54,7 @@ export default function TeacherAttendanceScan() {
      return;
    }
    setIsGettingLocation(true);
-   setLocationMessage("Mendeteksi lokasi anda saat ini...");
+   setLocationMessage("Mendeteksi lokasi anda saat ini . . .");
    // Check if we have recent cached location (within 30 seconds)
    const now = Date.now();
    if (locationCacheRef.current &&
@@ -219,7 +219,7 @@ export default function TeacherAttendanceScan() {
      const effectiveDistance = Math.max(0, distance - accuracy);
 
      if (effectiveDistance <= settings.radius) {
-       setLocationMessage(`✅ Lokasi anda sekarang terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)} meter, radius akurasi : ±${Math.round(accuracy)} meter.`);
+       setLocationMessage(`✅ Lokasi anda sekarang terdeteksi berada di Area Sekolah dengan jarak : ${Math.round(distance)} meter, radius akurasi : ±${Math.round(accuracy)} meter.`);
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
@@ -923,10 +923,10 @@ export default function TeacherAttendanceScan() {
                    {isGettingLocation ? (
                      <span className="flex items-center">
                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                       {locationMessage || "Mencari lokasi..."}
+                       {locationMessage || "Mencari lokasi . . ."}
                      </span>
                    ) : (
-                     locationMessage || "Lokasi Belum Terdeteksi..."
+                     locationMessage || "Lokasi Belum Terdeteksi . . ."
                    )}
                  </p>
                </div>
