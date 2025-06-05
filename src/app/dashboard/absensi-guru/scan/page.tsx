@@ -219,22 +219,22 @@ export default function TeacherAttendanceScan() {
      const effectiveDistance = Math.max(0, distance - accuracy);
 
      if (effectiveDistance <= settings.radius) {
-       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi mungkin di Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+         setLocationMessage(`⚠️ Lokasi mendekati Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
        } else {
-         setLocationMessage(`❌ Lokasi di luar Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan jarak : ${Math.round(distance)}m, akurasi : ±${Math.round(accuracy)}m`);
        }
      }
    } else {
-     setLocationMessage(`📍 Posisi terdeteksi (akurasi: ±${Math.round(accuracy)}m), tapi lokasi sekolah belum diatur`);
+     setLocationMessage(`📍 Posisi anda terdeteksi (akurasi : ±${Math.round(accuracy)}m), akan tapi lokasi sekolah belum diatur.`);
    }
  };
  // Enhanced error handling
  const handleLocationError = (error: any) => {
-   let errorMsg = "Gagal mendapatkan lokasi. ";
+   let errorMsg = "Gagal mendapatkan lokasi... ";
 
    if (error?.code) {
      switch (error.code) {
@@ -926,7 +926,7 @@ export default function TeacherAttendanceScan() {
                        {locationMessage || "Mencari lokasi..."}
                      </span>
                    ) : (
-                     locationMessage || "Belum mendeteksi lokasi"
+                     locationMessage || "Lokasi belum terdeteksi..."
                    )}
                  </p>
                </div>
