@@ -911,7 +911,7 @@ export default function TeacherAttendanceScan() {
            {/* Enhanced Location information */}
            {attendanceType !== 'izin' && attendanceType !== 'alpha' && (
              <div className={`p-3 mb-3 rounded-lg flex items-center justify-between ${
-               !location ? 'bg-gray-100 text-red-500' :
+               !location ? 'bg-gray-100 text-gray-500' :
                locationMessage.includes('❌') ? 'bg-red-100 text-red-700' :
                locationMessage.includes('⚠️') ? 'bg-amber-100 text-amber-700' :
                locationMessage.includes('✅') ? 'bg-green-100 text-green-700' :
