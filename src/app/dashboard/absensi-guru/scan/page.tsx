@@ -54,7 +54,7 @@ export default function TeacherAttendanceScan() {
      return;
    }
    setIsGettingLocation(true);
-   setLocationMessage("Mencari lokasi dengan akurasi tinggi...");
+   setLocationMessage("Mendeteksi lokasi dengan akurasi tinggi...");
    // Check if we have recent cached location (within 30 seconds)
    const now = Date.now();
    if (locationCacheRef.current &&
