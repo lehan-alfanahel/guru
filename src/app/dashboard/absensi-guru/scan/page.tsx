@@ -2,18 +2,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Camera, MapPin, User, AlertCircle, ArrowLeft, Loader2, CheckCircle, Timer, LogIn, LogOut, X, FileText, Calendar, UserX } from "lucide-react";
+import { Camera, MapPin, User, AlertCircle, ArrowLeft, Loader2, CheckCircle, Timer, LogIn, LogOut, X, FileText, Calendar, UserX, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { initCameraForWebview } from "@/utils/webview-camera-helper";
+interface LocationCache {
+ position: { lat: number; lng: number };
+ timestamp: number;
+ accuracy: number;
+}
 export default function TeacherAttendanceScan() {
  const { user, userRole, schoolId } = useAuth();
  const router = useRouter();
  const videoRef = useRef<HTMLVideoElement | null>(null);
  const canvasRef = useRef<HTMLCanvasElement | null>(null);
  const streamRef = useRef<MediaStream | null>(null);
-
+ const watchIdRef = useRef<number | null>(null);
+ const locationCacheRef = useRef<LocationCache | null>(null);
  const [loading, setLoading] = useState(true);
  const [scanning, setScanning] = useState(false);
  const [capturing, setCapturing] = useState(false);
@@ -22,6 +28,8 @@ export default function TeacherAttendanceScan() {
  const [photoTaken, setPhotoTaken] = useState(false);
  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
  const [locationMessage, setLocationMessage] = useState("");
+ const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
+ const [isGettingLocation, setIsGettingLocation] = useState(false);
  const [attendanceType, setAttendanceType] = useState<"in" | "out" | "izin" | "alpha">("in");
  const [izinReason, setIzinReason] = useState("");
  const [alphaReason, setAlphaReason] = useState("");
@@ -38,6 +46,224 @@ export default function TeacherAttendanceScan() {
    const month = (date.getMonth() + 1).toString().padStart(2, '0');
    const year = date.getFullYear();
    return `${day}-${month}-${year}`;
+ };
+ // Enhanced location detection with multiple strategies
+ const getDeviceLocationOptimized = async (): Promise<void> => {
+   if (!navigator.geolocation) {
+     setLocationMessage("Geolocation tidak didukung oleh browser ini");
+     return;
+   }
+   setIsGettingLocation(true);
+   setLocationMessage("Mencari lokasi dengan akurasi tinggi...");
+   // Check if we have recent cached location (within 30 seconds)
+   const now = Date.now();
+   if (locationCacheRef.current &&
+       (now - locationCacheRef.current.timestamp) < 30000) {
+     const cached = locationCacheRef.current;
+     setLocation(cached.position);
+     setLocationAccuracy(cached.accuracy);
+     validateLocationDistance(cached.position, cached.accuracy);
+     setIsGettingLocation(false);
+     return;
+   }
+   try {
+     // Strategy 1: Fast location first (for immediate feedback)
+     const fastLocation = await getFastLocation();
+     if (fastLocation) {
+       setLocation(fastLocation.position);
+       setLocationAccuracy(fastLocation.accuracy);
+       setLocationMessage(`Lokasi terdeteksi (akurasi: ${Math.round(fastLocation.accuracy)}m) - Mencari posisi lebih akurat...`);
+       validateLocationDistance(fastLocation.position, fastLocation.accuracy);
+     }
+     // Strategy 2: High accuracy location (parallel)
+     const accurateLocation = await getHighAccuracyLocation();
+     if (accurateLocation) {
+       setLocation(accurateLocation.position);
+       setLocationAccuracy(accurateLocation.accuracy);
+       validateLocationDistance(accurateLocation.position, accurateLocation.accuracy);
+
+       // Cache the result
+       locationCacheRef.current = {
+         position: accurateLocation.position,
+         timestamp: now,
+         accuracy: accurateLocation.accuracy
+       };
+     }
+     // Strategy 3: Start continuous tracking for real-time updates
+     startLocationWatching();
+   } catch (error) {
+     console.error("Enhanced location error:", error);
+     handleLocationError(error);
+   } finally {
+     setIsGettingLocation(false);
+   }
+ };
+ // Fast location strategy (lower accuracy, faster response)
+ const getFastLocation = (): Promise<{ position: { lat: number; lng: number }; accuracy: number } | null> => {
+   return new Promise((resolve) => {
+     const timeout = setTimeout(() => resolve(null), 3000); // 3 second timeout
+     navigator.geolocation.getCurrentPosition(
+       (position) => {
+         clearTimeout(timeout);
+         resolve({
+           position: {
+             lat: position.coords.latitude,
+             lng: position.coords.longitude,
+           },
+           accuracy: position.coords.accuracy
+         });
+       },
+       () => {
+         clearTimeout(timeout);
+         resolve(null);
+       },
+       {
+         enableHighAccuracy: false, // Faster but less accurate
+         timeout: 3000,
+         maximumAge: 60000, // Accept 1-minute old position
+       }
+     );
+   });
+ };
+ // High accuracy location strategy
+ const getHighAccuracyLocation = (): Promise<{ position: { lat: number; lng: number }; accuracy: number } | null> => {
+   return new Promise((resolve) => {
+     let attempts = 0;
+     const maxAttempts = 3;
+     const tryGetLocation = () => {
+       attempts++;
+       const timeout = setTimeout(() => {
+         if (attempts < maxAttempts) {
+           tryGetLocation();
+         } else {
+           resolve(null);
+         }
+       }, 8000);
+       navigator.geolocation.getCurrentPosition(
+         (position) => {
+           clearTimeout(timeout);
+           resolve({
+             position: {
+               lat: position.coords.latitude,
+               lng: position.coords.longitude,
+             },
+             accuracy: position.coords.accuracy
+           });
+         },
+         (error) => {
+           clearTimeout(timeout);
+           console.warn(`Location attempt ${attempts} failed:`, error);
+           if (attempts < maxAttempts) {
+             setTimeout(tryGetLocation, 1000); // Retry after 1 second
+           } else {
+             resolve(null);
+           }
+         },
+         {
+           enableHighAccuracy: true,
+           timeout: 8000,
+           maximumAge: 10000, // Accept 10-second old position
+         }
+       );
+     };
+     tryGetLocation();
+   });
+ };
+ // Start continuous location watching
+ const startLocationWatching = () => {
+   if (watchIdRef.current) {
+     navigator.geolocation.clearWatch(watchIdRef.current);
+   }
+   watchIdRef.current = navigator.geolocation.watchPosition(
+     (position) => {
+       const newLocation = {
+         lat: position.coords.latitude,
+         lng: position.coords.longitude,
+       };
+
+       // Only update if accuracy is better or significantly different position
+       if (!location ||
+           position.coords.accuracy < (locationAccuracy || Infinity) ||
+           calculateDistance(location.lat, location.lng, newLocation.lat, newLocation.lng) > 5) {
+
+         setLocation(newLocation);
+         setLocationAccuracy(position.coords.accuracy);
+         validateLocationDistance(newLocation, position.coords.accuracy);
+
+         // Update cache
+         locationCacheRef.current = {
+           position: newLocation,
+           timestamp: Date.now(),
+           accuracy: position.coords.accuracy
+         };
+       }
+     },
+     (error) => {
+       console.warn("Watch position error:", error);
+     },
+     {
+       enableHighAccuracy: true,
+       timeout: 10000,
+       maximumAge: 5000,
+     }
+   );
+ };
+ // Validate location distance with enhanced messaging
+ const validateLocationDistance = (userLocation: { lat: number; lng: number }, accuracy: number) => {
+   if (settings.schoolLocation.lat && settings.schoolLocation.lng) {
+     const distance = calculateDistance(
+       userLocation.lat, userLocation.lng,
+       settings.schoolLocation.lat, settings.schoolLocation.lng
+     );
+     // Consider GPS accuracy in distance calculation
+     const effectiveDistance = Math.max(0, distance - accuracy);
+
+     if (effectiveDistance <= settings.radius) {
+       setLocationMessage(`✅ Lokasi terdeteksi di Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+     } else {
+       const excess = effectiveDistance - settings.radius;
+       if (excess <= accuracy) {
+         setLocationMessage(`⚠️ Lokasi mungkin di Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+       } else {
+         setLocationMessage(`❌ Lokasi di luar Area Sekolah (jarak: ${Math.round(distance)}m, akurasi: ±${Math.round(accuracy)}m)`);
+       }
+     }
+   } else {
+     setLocationMessage(`📍 Posisi terdeteksi (akurasi: ±${Math.round(accuracy)}m), tapi lokasi sekolah belum diatur`);
+   }
+ };
+ // Enhanced error handling
+ const handleLocationError = (error: any) => {
+   let errorMsg = "Gagal mendapatkan lokasi. ";
+
+   if (error?.code) {
+     switch (error.code) {
+       case error.PERMISSION_DENIED:
+         errorMsg += "Izin lokasi ditolak. Harap aktifkan izin lokasi di pengaturan browser.";
+         break;
+       case error.POSITION_UNAVAILABLE:
+         errorMsg += "Informasi lokasi tidak tersedia. Pastikan GPS aktif dan sinyal bagus.";
+         break;
+       case error.TIMEOUT:
+         errorMsg += "Waktu pencarian lokasi habis. Coba lagi atau pindah ke area dengan sinyal GPS lebih baik.";
+         break;
+       default:
+         errorMsg += "Error tidak diketahui. Pastikan GPS diaktifkan dan browser memiliki izin lokasi.";
+     }
+   } else {
+     errorMsg += "Pastikan GPS diaktifkan dan browser memiliki izin lokasi.";
+   }
+
+   setLocationMessage(errorMsg);
+   toast.error(errorMsg);
+ };
+ // Manual location refresh
+ const refreshLocation = async () => {
+   // Clear cache to force fresh location
+   locationCacheRef.current = null;
+   setLocation(null);
+   setLocationAccuracy(null);
+   await getDeviceLocationOptimized();
  };
  // Handle page initialization and cleanup
  useEffect(() => {
@@ -70,11 +296,14 @@ export default function TeacherAttendanceScan() {
    };
    loadSettings();
    setLoading(false);
-   // Clean up function to stop camera when component unmounts
+   // Clean up function to stop camera and location watching
    return () => {
      if (streamRef.current) {
        const tracks = streamRef.current.getTracks();
        tracks.forEach(track => track.stop());
+     }
+     if (watchIdRef.current) {
+       navigator.geolocation.clearWatch(watchIdRef.current);
      }
    };
  }, [router, schoolId, userRole]);
@@ -103,7 +332,6 @@ export default function TeacherAttendanceScan() {
    try {
      setScanning(true);
      setCameraError(null);
-
      // Get platform info to adapt camera access strategy
      const platform = getPlatformInfo();
      console.log("Platform detected:", platform);
@@ -157,8 +385,8 @@ export default function TeacherAttendanceScan() {
        }
      };
      connectStreamToVideo();
-     // Get location
-     getDeviceLocation();
+     // Get location with enhanced detection
+     await getDeviceLocationOptimized();
    } catch (error: any) {
      console.error("Error starting camera:", error);
      let errorMessage = "Gagal mengakses kamera";
@@ -178,63 +406,6 @@ export default function TeacherAttendanceScan() {
      setScanning(false);
    }
  };
- // Get device location with enhanced error handling
- const getDeviceLocation = () => {
-   if (!navigator.geolocation) {
-     setLocationMessage("Geolocation tidak didukung oleh browser ini");
-     return;
-   }
-   const locationOptions = {
-     enableHighAccuracy: true,
-     timeout: 10000,
-     maximumAge: 0
-   };
-   navigator.geolocation.getCurrentPosition(
-     // Success callback
-     (position) => {
-       const userLocation = {
-         lat: position.coords.latitude,
-         lng: position.coords.longitude
-       };
-       setLocation(userLocation);
-       // Calculate distance from school
-       if (settings.schoolLocation.lat && settings.schoolLocation.lng) {
-         const distance = calculateDistance(
-           userLocation.lat, userLocation.lng,
-           settings.schoolLocation.lat, settings.schoolLocation.lng
-         );
-         if (distance <= settings.radius) {
-           setLocationMessage("Lokasi terdeteksi di Area Sekolah");
-         } else {
-           setLocationMessage(`Lokasi Absensi di luar Area Sekolah, jarak sekitar (${Math.round(distance)} meter)`);
-         }
-       } else {
-         setLocationMessage("Posisi terdeteksi, tapi lokasi sekolah belum diatur");
-       }
-     },
-     // Error callback
-     (error) => {
-       console.error("Geolocation error:", error);
-       let errorMsg = "Gagal mendapatkan lokasi. ";
-       switch (error.code) {
-         case error.PERMISSION_DENIED:
-           errorMsg += "Izin lokasi ditolak. Harap aktifkan izin lokasi di pengaturan.";
-           break;
-         case error.POSITION_UNAVAILABLE:
-           errorMsg += "Informasi lokasi tidak tersedia.";
-           break;
-         case error.TIMEOUT:
-           errorMsg += "Waktu permintaan lokasi habis.";
-           break;
-         default:
-           errorMsg += "Pastikan GPS diaktifkan.";
-       }
-       setLocationMessage(errorMsg);
-       toast.error(errorMsg);
-     },
-     locationOptions
-   );
- };
  // Stop camera
  const stopCamera = () => {
    if (streamRef.current) {
@@ -244,6 +415,10 @@ export default function TeacherAttendanceScan() {
    }
    if (videoRef.current) {
      videoRef.current.srcObject = null;
+   }
+   if (watchIdRef.current) {
+     navigator.geolocation.clearWatch(watchIdRef.current);
+     watchIdRef.current = null;
    }
    setScanning(false);
    setPhotoTaken(false);
@@ -343,7 +518,7 @@ export default function TeacherAttendanceScan() {
      setCapturing(false);
    }
  };
- // Submit attendance
+ // Submit attendance with enhanced location validation
  const submitAttendance = async () => {
    if (!schoolId || !recognizedTeacher) {
      toast.error("Data tidak lengkap");
@@ -360,7 +535,7 @@ export default function TeacherAttendanceScan() {
        second: '2-digit',
        hour12: false
      });
-     // Check if within allowed distance (not required for 'izin' or 'alpha' type)
+     // Enhanced location validation (not required for 'izin' or 'alpha' type)
      if (attendanceType !== 'izin' && attendanceType !== 'alpha') {
        if (!location || !settings.schoolLocation) {
          toast.error("Data lokasi tidak lengkap");
@@ -371,10 +546,19 @@ export default function TeacherAttendanceScan() {
          location.lat, location.lng,
          settings.schoolLocation.lat, settings.schoolLocation.lng
        );
-       if (distance > settings.radius) {
-         toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar (${Math.round(distance)} meter)`);
-         setProcessingCapture(false);
-         return;
+       // Consider GPS accuracy in validation
+       const effectiveDistance = Math.max(0, distance - (locationAccuracy || 0));
+
+       if (effectiveDistance > settings.radius) {
+         const excess = effectiveDistance - settings.radius;
+         if (excess > (locationAccuracy || 0)) {
+           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)}m (akurasi: ±${Math.round(locationAccuracy || 0)}m)`);
+           setProcessingCapture(false);
+           return;
+         } else {
+           // Show warning but allow (within GPS accuracy margin)
+           toast.warning(`Lokasi mungkin di luar area sekolah, tetapi masih dalam margin akurasi GPS`);
+         }
        }
      }
      // Validate reason for izin and alpha
@@ -409,19 +593,18 @@ export default function TeacherAttendanceScan() {
      }
      // Determine status based on attendance type and time
      let status = "present"; // Default status
-
      if (attendanceType === 'izin') {
-       status = "izin"; // Use "izin" instead of "permitted" for consistency
+       status = "izin";
      } else if (attendanceType === 'alpha') {
-       status = "alpha"; // Use "alpha" instead of "absent" for consistency
+       status = "alpha";
      } else {
        // For 'in' and 'out' types, check if late
        const hour = currentDate.getHours();
        if (attendanceType === 'in' && hour >= 8) {
-         status = "terlambat"; // Use "terlambat" instead of "late" for consistency
+         status = "terlambat";
        }
      }
-     // Save attendance record
+     // Save attendance record with location accuracy
      const attendanceData = {
        teacherId: recognizedTeacher.id,
        teacherName: recognizedTeacher.name,
@@ -433,7 +616,8 @@ export default function TeacherAttendanceScan() {
        status: status,
        location: {
          lat: location?.lat || 0,
-         lng: location?.lng || 0
+         lng: location?.lng || 0,
+         accuracy: locationAccuracy || 0
        },
        schoolId: schoolId,
        note: attendanceType === 'izin' ? izinReason :
@@ -444,7 +628,7 @@ export default function TeacherAttendanceScan() {
      await sendTelegramNotification(
        recognizedTeacher.name,
        attendanceType,
-       displayDateStr, // Use Indonesian format for display
+       displayDateStr,
        timeStr,
        attendanceType === 'izin' ? izinReason : attendanceType === 'alpha' ? alphaReason : ""
      );
@@ -504,7 +688,7 @@ export default function TeacherAttendanceScan() {
      }
      const telegramSettings = telegramSettingsDoc.data();
      const token = telegramSettings.token || "7702797779:•••••••••••••••••••••••••••••••••••";
-     const chatId = telegramSettings.chatId || ""; // Should be the school principal's chat ID
+     const chatId = telegramSettings.chatId || "";
      if (!chatId) {
        console.error("No chat ID found for notification");
        return;
@@ -516,7 +700,12 @@ export default function TeacherAttendanceScan() {
      else if (attendanceType === 'izin') messageType = 'IZIN';
      else if (attendanceType === 'alpha') messageType = 'ALPHA';
      let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini, tanggal ${date} pukul ${time} WIB.`;
-      // Add reason if it's an izin or alpha type
+
+     // Add location accuracy info for location-based attendance
+     if (attendanceType !== 'izin' && attendanceType !== 'alpha' && locationAccuracy) {
+       message += `\n📍 Akurasi lokasi: ±${Math.round(locationAccuracy)}m`;
+     }
+     // Add reason if it's an izin or alpha type
      if ((attendanceType === 'izin' || attendanceType === 'alpha') && reason) {
        message += `\nAlasan ${messageType} : "${reason}".`;
      }
@@ -571,7 +760,7 @@ export default function TeacherAttendanceScan() {
            attendanceType === 'out' ? 'PULANG' :
            attendanceType === 'izin' ? 'IZIN' :
            'ALPHA'
-         }" pada hari ini, 
+         }" pada hari ini,
            {(attendanceType === 'izin' && izinReason) ? ` dengan alasan : "${izinReason}"` : ''}
            {(attendanceType === 'alpha' && alphaReason) ? ` dengan alasan : "${alphaReason}"` : ''}.
          </p>
@@ -605,7 +794,6 @@ export default function TeacherAttendanceScan() {
                <span className="editable-text">PILIH JENIS ABSENSI</span>
              </h2>
            </center>
-
            {/* Attendance type selector */}
            <div className="flex items-center justify-center p-3 bg-gray-100 rounded-lg mb-4">
              <div className="flex space-x-1 bg-white p-1 rounded-lg shadow-sm">
@@ -615,17 +803,14 @@ export default function TeacherAttendanceScan() {
                    attendanceType === "in" ? "bg-green-600 text-white" : "bg-white text-gray-700"
                  }`}
                >
-                 {/*<LogIn size={16} />*/}
                  <span><span className="editable-text">Masuk</span></span>
                </button>
-
-                <button
+               <button
                  onClick={() => setAttendanceType("izin")}
                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
                    attendanceType === "izin" ? "bg-green-600 text-white" : "bg-white text-gray-700"
                  }`}
                >
-                 {/*<Calendar size={16} />*/}
                  <span><span className="editable-text">Izin</span></span>
                </button>
                <button
@@ -634,20 +819,17 @@ export default function TeacherAttendanceScan() {
                    attendanceType === "alpha" ? "bg-green-600 text-white" : "bg-white text-gray-700"
                  }`}
                >
-                 {/*<UserX size={16} />*/}
                  <span><span className="editable-text">Alpha</span></span>
                </button>
-             
+
                <button
                  onClick={() => setAttendanceType("out")}
                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
                    attendanceType === "out" ? "bg-green-600 text-white" : "bg-white text-gray-700"
                  }`}
                >
-                 {/*<LogOut size={16} />*/}
                  <span><span className="editable-text">Pulang</span></span>
                </button>
-               
              </div>
            </div>
            {/* If Izin is selected, show reason input */}
@@ -726,15 +908,38 @@ export default function TeacherAttendanceScan() {
              {/* Hidden canvas for processing */}
              <canvas ref={canvasRef} className="hidden"></canvas>
            </div>
-           {/* Location information */}
+           {/* Enhanced Location information */}
            {attendanceType !== 'izin' && attendanceType !== 'alpha' && (
-             <div className={`p-3 mb-3 rounded-lg flex items-center ${
+             <div className={`p-3 mb-3 rounded-lg flex items-center justify-between ${
                !location ? 'bg-gray-100 text-gray-500' :
-               locationMessage.includes('luar Area') ? 'bg-red-100 text-red-700' :
-               'bg-green-100 text-green-700'
+               locationMessage.includes('❌') ? 'bg-red-100 text-red-700' :
+               locationMessage.includes('⚠️') ? 'bg-amber-100 text-amber-700' :
+               locationMessage.includes('✅') ? 'bg-green-100 text-green-700' :
+               'bg-blue-100 text-blue-700'
              }`}>
-               <MapPin className="h-5 w-5 mr-2" />
-               <p className="text-sm text-gray-500">{locationMessage || "Mendeteksi lokasi..."}</p>
+               <div className="flex items-center flex-1">
+                 <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
+                 <p className="text-sm">
+                   {isGettingLocation ? (
+                     <span className="flex items-center">
+                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                       {locationMessage || "Mencari lokasi..."}
+                     </span>
+                   ) : (
+                     locationMessage || "Belum mendeteksi lokasi"
+                   )}
+                 </p>
+               </div>
+
+               {location && !isGettingLocation && (
+                 <button
+                   onClick={refreshLocation}
+                   className="ml-2 p-1 hover:bg-white hover:bg-opacity-50 rounded transition-colors"
+                   title="Refresh lokasi"
+                 >
+                   <RefreshCw className="h-4 w-4" />
+                 </button>
+               )}
              </div>
            )}
            {/* Special notice for Izin */}
