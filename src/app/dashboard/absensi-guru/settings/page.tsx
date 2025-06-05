@@ -458,5 +458,6 @@ export default function TeacherAttendanceSettings() {
             </motion.button>
           </div>
         </div>}
+    <hr className="border-t border-none mb-5" />
     </div>;
 }
