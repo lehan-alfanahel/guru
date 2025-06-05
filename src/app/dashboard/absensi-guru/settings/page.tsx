@@ -250,7 +250,7 @@ export default function TeacherAttendanceSettings() {
     }
   };
   return <div className="pb-20 md:pb-6" data-unique-id="a862182a-922f-4562-9b4a-a04087849abb" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
-      <div className="flex items-center justify-between mb-6" data-unique-id="716cb1be-2c91-4c9b-8d6a-5079d4c76301" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+      <div className="flex items-center justify-between mb-4" data-unique-id="716cb1be-2c91-4c9b-8d6a-5079d4c76301" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
         <div className="flex items-center" data-unique-id="9f1cca0d-a417-4564-8f75-754cddfaf11b" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
           <Link href="/dashboard/absensi-guru" className="p-2 mr-2 hover:bg-gray-100 rounded-full" data-unique-id="ef725917-ff17-43f2-b8ec-206d9019b8e7" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
             <ArrowLeft size={20} />
@@ -281,7 +281,7 @@ export default function TeacherAttendanceSettings() {
           </div>
           
           {/* Tab Content */}
-          <div className="p-6" data-unique-id="9b5dbb82-31d1-4ca7-8b9e-f31329e072c4" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
+          <div className="p-4" data-unique-id="9b5dbb82-31d1-4ca7-8b9e-f31329e072c4" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
             {/* Location Settings */}
             {activeTab === 'location' && <div data-unique-id="99f217ce-4fba-4b1a-b844-a23335ec704b" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
                 <h2 className="text-lg font-semibold mb-6" data-unique-id="9b63db92-73c2-4956-8c5f-dad2c237ebef" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="d1a98272-b17e-4eec-a3ef-d708b40b6cc0" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">Pengaturan Lokasi Sekolah</span></h2>
@@ -404,6 +404,13 @@ export default function TeacherAttendanceSettings() {
                         Untuk mendapatkan ID Chat, silakan kirim pesan ke 
                         </span><a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline mx-1" data-unique-id="b4a3c910-5415-4c03-9dcb-ac58f71c942f" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="fc95b12c-730b-4654-82ac-866287521204" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">@userinfobot</span></a><span className="editable-text" data-unique-id="9cf95e31-ac8d-496c-8a24-dc328277bcb1" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                         dan masukkan ID Telegram yang diberikan oleh userinfobot ke dalam ID Chat Telegram di bawah.
+                      </span></p>
+
+
+                      <p className="text-sm text-blue-600 mt-1" data-unique-id="1d4744f8-6a4c-4c42-b2f1-a3ca44fce92e" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="e5579d78-4104-4aad-8f3a-31640f217246" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                        Untuk mendapatkan ID Chat Grup Telegram agar memudahkan info notifikasi absensi terkirim ke dalam Grup, silahkan hubungi Admin melalui chat :  
+                        </span><a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline mx-1" data-unique-id="b4a3c910-5415-4c03-9dcb-ac58f71c942f" data-file-name="app/dashboard/absensi-guru/settings/page.tsx"><span className="editable-text" data-unique-id="fc95b12c-730b-4654-82ac-866287521204" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">WhatsApp</span></a><span className="editable-text" data-unique-id="9cf95e31-ac8d-496c-8a24-dc328277bcb1" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                        agar dibuatkan Grup Telegram dan diberikan ID Chat Grup Telegram.
                       </span></p>
                     </div>
                   </div>
