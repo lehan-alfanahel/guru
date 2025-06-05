@@ -449,7 +449,7 @@ export default function TeacherAttendanceSettings() {
                   
                   <button type="button" onClick={testTelegramBot} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900 active:bg-orange-800 transition-colors" data-unique-id="044bc501-dee1-4d6a-a191-66cbad115cd8" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     <MessageSquare size={16} className="inline-block mr-2" /><span className="editable-text" data-unique-id="f5bc4bd7-0ba6-496f-8c41-e0cebbdef172" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                    Kirim Pesan Test
+                    Kirim Pesan Test ke Telegram
                   </span></button>
                 </div>
               </div>}
