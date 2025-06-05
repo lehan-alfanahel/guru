@@ -703,7 +703,7 @@ export default function TeacherAttendanceScan() {
 
      // Add location accuracy info for location-based attendance
      if (attendanceType !== 'izin' && attendanceType !== 'alpha' && locationAccuracy) {
-       message += `\n📍 Akurasi lokasi: ±${Math.round(locationAccuracy)}m`;
+       message += `\n📍 Akurasi Lokasi : ±${Math.round(locationAccuracy)} meter.`;
      }
      // Add reason if it's an izin or alpha type
      if ((attendanceType === 'izin' || attendanceType === 'alpha') && reason) {
