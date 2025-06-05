@@ -515,7 +515,7 @@ export default function TeacherAttendanceScan() {
      else if (attendanceType === 'out') messageType = 'PULANG';
      else if (attendanceType === 'izin') messageType = 'IZIN';
      else if (attendanceType === 'alpha') messageType = 'ALPHA';
-     let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini tanggal ${date} pukul ${time} WIB.`;
+     let message = `GTK dengan nama ${teacherName} telah melakukan Absensi "${messageType}" pada hari ini, tanggal ${date} pukul ${time} WIB.`;
       // Add reason if it's an izin or alpha type
      if ((attendanceType === 'izin' || attendanceType === 'alpha') && reason) {
        message += `\nAlasan ${messageType} : "${reason}".`;
@@ -571,7 +571,7 @@ export default function TeacherAttendanceScan() {
            attendanceType === 'out' ? 'PULANG' :
            attendanceType === 'izin' ? 'IZIN' :
            'ALPHA'
-         }"
+         }" pada hari ini, 
            {(attendanceType === 'izin' && izinReason) ? ` dengan alasan : "${izinReason}"` : ''}
            {(attendanceType === 'alpha' && alphaReason) ? ` dengan alasan : "${alphaReason}"` : ''}.
          </p>
@@ -619,10 +619,6 @@ export default function TeacherAttendanceScan() {
                  <span><span className="editable-text">Masuk</span></span>
                </button>
 
-
-
-
-
                 <button
                  onClick={() => setAttendanceType("izin")}
                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
@@ -641,18 +637,7 @@ export default function TeacherAttendanceScan() {
                  {/*<UserX size={16} />*/}
                  <span><span className="editable-text">Alpha</span></span>
                </button>
-
-
-
-
-
-
-
-
-
-
-
-              
+             
                <button
                  onClick={() => setAttendanceType("out")}
                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
