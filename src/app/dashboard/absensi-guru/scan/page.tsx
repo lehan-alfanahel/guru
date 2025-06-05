@@ -921,7 +921,7 @@ export default function TeacherAttendanceScan() {
                  <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
                  <p className="text-sm">
                    {isGettingLocation ? (
-                     <span className="flex items-center">
+                     <span className="flex items-center text-blue-500">
                        <Loader2 className="h-4 w-4 animate-spin mr-2 text-blue-500" />
                        {locationMessage || "Mencari lokasi . . ."}
                      </span>
