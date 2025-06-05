@@ -291,7 +291,7 @@ export default function TeacherAttendanceSettings() {
                     Tentukan lokasi sekolah dan radius (dalam meter) di mana absensi diizinkan.
                     Guru hanya dapat melakukan absensi jika berada dalam radius yang ditentukan.
                   </span></p>
-                  <button onClick={getCurrentLocation} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:bg-blue-900 active:bg-blue-800 transition-colors mb-6" data-unique-id="4a1233ab-d185-45ba-9aea-aae569bc35a7" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
+                  <button onClick={getCurrentLocation} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mb-6" data-unique-id="4a1233ab-d185-45ba-9aea-aae569bc35a7" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     <MapPin size={16} className="inline-block mr-2" /><span className="editable-text" data-unique-id="320119de-1413-439d-ba54-a66e263fc713" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     Dapatkan Lokasi Saat Ini
                   </span></button>
@@ -442,7 +442,7 @@ export default function TeacherAttendanceSettings() {
                   
                   <button type="button" onClick={testTelegramBot} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" data-unique-id="044bc501-dee1-4d6a-a191-66cbad115cd8" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
                     <MessageSquare size={16} className="inline-block mr-2" /><span className="editable-text" data-unique-id="f5bc4bd7-0ba6-496f-8c41-e0cebbdef172" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-                    Kirim Pesan Test
+                    Kirim Pesan Test ...
                   </span></button>
                 </div>
               </div>}
@@ -450,7 +450,7 @@ export default function TeacherAttendanceSettings() {
           
           {/* Action buttons */}
           <div className="px-6 py-4 bg-gray-50 flex justify-end" data-unique-id="dc0dc60d-fc65-4c96-a676-32d1e2a297f2" data-file-name="app/dashboard/absensi-guru/settings/page.tsx">
-            <motion.button onClick={saveSettings} disabled={saving || saveSuccess} className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-white bg-primary hover:bg-orange-500 active:bg-orange-600 transition-colors ${saving || saveSuccess ? 'bg-green-600' : 'bg-primary hover:bg-primary hover:bg-opacity-90'}`} whileTap={{
+            <motion.button onClick={saveSettings} disabled={saving || saveSuccess} className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-white transition-colors ${saving || saveSuccess ? 'bg-green-600' : 'bg-primary hover:bg-orange-500 active:bg-orange-600'}`} whileTap={{
           scale: 0.95
         }} data-unique-id="e4e1b74a-17de-46e7-8d93-ccd2869180e7" data-file-name="app/dashboard/absensi-guru/settings/page.tsx" data-dynamic-text="true">
               {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : saveSuccess ? <CheckCircle className="h-5 w-5" /> : <Save className="h-5 w-5" />}
