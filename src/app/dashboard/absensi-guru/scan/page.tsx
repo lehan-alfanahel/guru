@@ -552,7 +552,7 @@ export default function TeacherAttendanceScan() {
        if (effectiveDistance > settings.radius) {
          const excess = effectiveDistance - settings.radius;
          if (excess > (locationAccuracy || 0)) {
-           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)} meter, dengan ketepatan akurasi: ±${Math.round(locationAccuracy || 0)} meter.`);
+           toast.error(`Anda berada di luar area Absensi Sekolah, dengan jarak sekitar ${Math.round(distance)} meter, dengan ketepatan akurasi : ±${Math.round(locationAccuracy || 0)} meter.`);
            setProcessingCapture(false);
            return;
          } else {
@@ -1009,7 +1009,7 @@ export default function TeacherAttendanceScan() {
              </button>
            )}
            {processingCapture && (
-             <div className="col-span-full flex items-center justify-center py-3 bg-red-500 text-white rounded-lg font-medium">
+             <div className="col-span-full flex items-center justify-center py-3 bg-orange-300 text-white rounded-lg font-medium">
                <Loader2 size={20} className="animate-spin mr-2" />
                <span className="editable-text">Memproses...</span>
              </div>
