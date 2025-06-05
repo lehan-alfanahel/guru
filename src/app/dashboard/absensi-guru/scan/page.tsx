@@ -54,7 +54,7 @@ export default function TeacherAttendanceScan() {
      return;
    }
    setIsGettingLocation(true);
-   setLocationMessage("Mendeteksi lokasi dengan akurasi tinggi...");
+   setLocationMessage("Mendeteksi lokasi anda saat ini...");
    // Check if we have recent cached location (within 30 seconds)
    const now = Date.now();
    if (locationCacheRef.current &&
@@ -223,13 +223,13 @@ export default function TeacherAttendanceScan() {
      } else {
        const excess = effectiveDistance - settings.radius;
        if (excess <= accuracy) {
-         setLocationMessage(`⚠️ Lokasi anda mendekati Area Sekolah dengan Jarak sekitar : ${Math.round(distance)} meter.`);
+         setLocationMessage(`⚠️ Lokasi anda saat ini mendekati Area Sekolah dengan jarak sekitar : ${Math.round(distance)} meter.`);
        } else {
-         setLocationMessage(`❌ Lokasi berada di luar Area Sekolah dengan Jarak sekitar : ${Math.round(distance)} meter.`);
+         setLocationMessage(`❌ Lokasi anda saat ini berada di luar Area Sekolah dengan jarak sekitar : ${Math.round(distance)} meter.`);
        }
      }
    } else {
-     setLocationMessage(`📍 Posisi anda terdeteksi (Akurasi : ±${Math.round(accuracy)} meter), akan tapi lokasi sekolah belum diatur.`);
+     setLocationMessage(`📍 Posisi anda sudah terdeteksi (Akurasi : ±${Math.round(accuracy)} meter), akan tapi lokasi sekolah belum diatur.`);
    }
  };
  // Enhanced error handling
