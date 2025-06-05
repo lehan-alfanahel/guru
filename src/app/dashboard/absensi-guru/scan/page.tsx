@@ -234,7 +234,7 @@ export default function TeacherAttendanceScan() {
  };
  // Enhanced error handling
  const handleLocationError = (error: any) => {
-   let errorMsg = "Gagal mendapatkan lokasi... ";
+   let errorMsg = "Gagal mendapatkan lokasi . . . ";
 
    if (error?.code) {
      switch (error.code) {
@@ -344,8 +344,8 @@ export default function TeacherAttendanceScan() {
          height: 480,
          facing: "user",
          onError: (err) => {
-           console.error("WebView camera error:", err);
-           setCameraError(`WebView camera error: ${err.message || err}`);
+           console.error("WebView camera error :", err);
+           setCameraError(`WebView camera error : ${err.message || err}`);
          }
        });
      } else {
@@ -375,8 +375,8 @@ export default function TeacherAttendanceScan() {
          videoRef.current.onloadedmetadata = () => {
            if (videoRef.current) {
              videoRef.current.play().catch(playError => {
-               console.error("Error playing video:", playError);
-               setCameraError(`Error playing video: ${playError.message}`);
+               console.error("Error playing video :", playError);
+               setCameraError(`Error playing video : ${playError.message}`);
              });
            }
          };
@@ -388,7 +388,7 @@ export default function TeacherAttendanceScan() {
      // Get location with enhanced detection
      await getDeviceLocationOptimized();
    } catch (error: any) {
-     console.error("Error starting camera:", error);
+     console.error("Error starting camera :", error);
      let errorMessage = "Gagal mengakses kamera";
      if (error.name === "NotFoundError" || error.name === "DevicesNotFoundError") {
        errorMessage = "Tidak menemukan kamera pada perangkat";
@@ -399,7 +399,7 @@ export default function TeacherAttendanceScan() {
      } else if (error.name === "OverconstrainedError" || error.name === "ConstraintNotSatisfiedError") {
        errorMessage = "Tidak dapat menemukan kamera yang sesuai dengan persyaratan";
      } else {
-       errorMessage = `Gagal mengakses kamera: ${error.message || error}`;
+       errorMessage = `Gagal mengakses kamera : ${error.message || error}`;
      }
      setCameraError(errorMessage);
      toast.error(errorMessage);
@@ -491,7 +491,7 @@ export default function TeacherAttendanceScan() {
              role: userData.role === 'teacher' ? 'Guru' : 'Tenaga Kependidikan'
            });
          } else {
-           toast.error("Data pengguna tidak ditemukan");
+           toast.error("Data Pengguna tidak ditemukan . . .");
          }
        }
      } else if (userRole === 'admin') {
@@ -503,7 +503,7 @@ export default function TeacherAttendanceScan() {
            setRecognizedTeacher({
              id: user.uid,
              name: userData.name || user.displayName || "Administrator",
-             nik: userData.nik || "NIP tidak tersedia",
+             nik: userData.nik || "NIP tidak tersedia . . .",
              role: "Administrator"
            });
          }
@@ -512,7 +512,7 @@ export default function TeacherAttendanceScan() {
      setProcessingCapture(false);
      setCapturing(false);
    } catch (error) {
-     console.error("Error processing image:", error);
+     console.error("Error processing image :", error);
      toast.error("Gagal memproses gambar");
      setProcessingCapture(false);
      setCapturing(false);
@@ -521,7 +521,7 @@ export default function TeacherAttendanceScan() {
  // Submit attendance with enhanced location validation
  const submitAttendance = async () => {
    if (!schoolId || !recognizedTeacher) {
-     toast.error("Data tidak lengkap");
+     toast.error("Data tidak lengkap . . .");
      return;
    }
    try {
@@ -538,7 +538,7 @@ export default function TeacherAttendanceScan() {
      // Enhanced location validation (not required for 'izin' or 'alpha' type)
      if (attendanceType !== 'izin' && attendanceType !== 'alpha') {
        if (!location || !settings.schoolLocation) {
-         toast.error("Data lokasi tidak lengkap");
+         toast.error("Data lokasi tidak lengkap . . .");
          setProcessingCapture(false);
          return;
        }
@@ -557,18 +557,18 @@ export default function TeacherAttendanceScan() {
            return;
          } else {
            // Show warning but allow (within GPS accuracy margin)
-           toast.warning(`Lokasi mungkin di luar area sekolah, tetapi masih dalam margin akurasi GPS`);
+           toast.warning(`Lokasi mungkin di luar area sekolah, tetapi masih dalam margin akurasi GPS.`);
          }
        }
      }
      // Validate reason for izin and alpha
      if (attendanceType === 'izin' && !izinReason.trim()) {
-       toast.error("Alasan izin harus diisi");
+       toast.error("Alasan izin harus diisi . . .");
        setProcessingCapture(false);
        return;
      }
      if (attendanceType === 'alpha' && !alphaReason.trim()) {
-       toast.error("Alasan alpha harus diisi");
+       toast.error("Alasan alpha harus diisi . . .");
        setProcessingCapture(false);
        return;
      }
