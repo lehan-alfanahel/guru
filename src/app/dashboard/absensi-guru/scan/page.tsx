@@ -890,7 +890,7 @@ export default function TeacherAttendanceScan() {
                  {!cameraError && (
                    <div className="absolute inset-0 flex items-center justify-center">
                      <div className="absolute bottom-1 left-0 right-0 text-center">
-                       <p className="text-gray-400 text-sm bg-black bg-opacity-20 inline-block px-3 py-2 rounded">
+                       <p className="text-gray-400 text-sm bg-black bg-opacity-20 inline-block px-3 py-1 rounded">
                          <span className="editable-text">Posisikan diri Anda dengan jelas</span>
                        </p>
                      </div>
@@ -911,7 +911,7 @@ export default function TeacherAttendanceScan() {
            {/* Enhanced Location information */}
            {attendanceType !== 'izin' && attendanceType !== 'alpha' && (
              <div className={`p-3 mb-3 rounded-lg flex items-center justify-between ${
-               !location ? 'bg-gray-100 text-gray-500' :
+               !location ? 'bg-gray-100 text-red-500' :
                locationMessage.includes('❌') ? 'bg-red-100 text-red-700' :
                locationMessage.includes('⚠️') ? 'bg-amber-100 text-amber-700' :
                locationMessage.includes('✅') ? 'bg-green-100 text-green-700' :
@@ -922,7 +922,7 @@ export default function TeacherAttendanceScan() {
                  <p className="text-sm">
                    {isGettingLocation ? (
                      <span className="flex items-center">
-                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                       <Loader2 className="h-4 w-4 animate-spin mr-2 text-blue-500" />
                        {locationMessage || "Mencari lokasi . . ."}
                      </span>
                    ) : (
